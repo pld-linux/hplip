@@ -88,7 +88,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc hplip_readme.html
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/hp*
 
 %if %{with cups}
 %files ppd
