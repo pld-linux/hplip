@@ -8,12 +8,12 @@
 Summary:	HP Inkjet Server
 Summary(pl):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	0.8.4
+Version:	0.9.4
 Release:	0.1
 License:	BSD
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hpinkjet/%{name}-%{version}.tar.gz
-# Source0-md5:	6a16b26222568f0b9fdcfcc16f4b93d0
+# Source0-md5:	2ebb0708d7ac18f923540bf75250cd30
 URL:		http://hpinkjet.sourceforge.net/
 #Patch0:		%{name}-ac_fixes.patch
 BuildRequires:	autoconf
