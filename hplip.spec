@@ -3,7 +3,7 @@
 #	- Remove conflict with hpijs (binary name conflict)
 #
 # Conditional build:
-%bcond_without  cups	# without CUPS support
+%bcond_without	cups	# without CUPS support
 #
 Summary:	HP Inkjet Server
 Summary(pl):	Serwer dla drukarek HP Inkjet
