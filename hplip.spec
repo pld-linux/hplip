@@ -1,7 +1,11 @@
 # TODO:
 #	- Review unpackaged files
-#	- Remove conflict with hpijs (binary name conflict) or add obsoletes
-#	- package /usr/share/hplip (split into few separate subpackages?)
+#       - write initscript (based on /usr/share/hplip/hplip
+#       - add desktop file for toolbox
+#       - "env python" -> "/usr/bin/python"
+#       - symlinks in /usr/bin for scripts from /usr/share/hplip
+#       - all scripts are in python, merge pyhton subpackage to main
+#       package ?
 #
 # Conditional build:
 %bcond_without	cups	# without CUPS support
@@ -9,13 +13,14 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	0.9.6
+Version:	0.9.10
 Release:	0.1
-License:	BSD
+License:	BSD and GPL v2 
 Group:		Applications/System
-Source0:	http://dl.sourceforge.net/hpinkjet/%{name}-%{version}.tar.gz
-# Source0-md5:	a95d8087198e16dde758332b612fb112
-URL:		http://hpinkjet.sourceforge.net/
+Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
+# Source0-md5:	349489b10fb44d1bf105b04ff5352551
+Patch0:		%{name}-0.9.10-2.patch
+URL:		http://hplip.sourceforge.net/
 BuildRequires:	automake
 BuildRequires:	autoconf
 %{?with_cups:BuildRequires:	cups-devel}
@@ -24,7 +29,7 @@ BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
 Conflicts:	ghostscript <= 7.00-3
-Conflicts:	hpijs
+Obsoletes:	hpijs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _ulibdir        %{_prefix}/lib
@@ -100,6 +105,7 @@ Interfejs Pythonowy do HPLIP.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 install /usr/share/automake/config.* .
@@ -140,6 +146,41 @@ rm -rf $RPM_BUILD_ROOT
 %doc hplip_readme.html
 %attr(755,root,root) %{_bindir}/hp*
 %attr(755,root,root) %{_sbindir}/hp*
+%dir %{_datadir}/hplip
+# info about GPL v2 for some files
+%{_datadir}/hplip/COPYING
+# initscript for hplip helpers
+#%{_datadir}/hplip/hplip
+#%{_datadir}/hplip/hplip.sh
+%{_datadir}/hplip/__init__.py
+%{_datadir}/hplip/*.png
+%{_datadir}/hplip/*.html
+%attr(755,root,root) %{_datadir}/hplip/align
+%attr(755,root,root) %{_datadir}/hplip/check
+%attr(755,root,root) %{_datadir}/hplip/clean
+%attr(755,root,root) %{_datadir}/hplip/colorcal
+%attr(755,root,root) %{_datadir}/hplip/fab
+%attr(755,root,root) %{_datadir}/hplip/hpssd.py
+%attr(755,root,root) %{_datadir}/hplip/info
+%attr(755,root,root) %{_datadir}/hplip/levels
+%attr(755,root,root) %{_datadir}/hplip/makeuri
+%attr(755,root,root) %{_datadir}/hplip/photo
+%attr(755,root,root) %{_datadir}/hplip/print
+%attr(755,root,root) %{_datadir}/hplip/sendfax
+%attr(755,root,root) %{_datadir}/hplip/setup
+%attr(755,root,root) %{_datadir}/hplip/testpage
+%attr(755,root,root) %{_datadir}/hplip/toolbox
+%attr(755,root,root) %{_datadir}/hplip/unload
+%{_datadir}/hplip/base
+# need look
+%{_datadir}/hplip/data
+# fax subpackage ?
+%{_datadir}/hplip/fax
+%{_datadir}/hplip/pcard
+%{_datadir}/hplip/plugins
+%{_datadir}/hplip/prnt
+%{_datadir}/hplip/scan
+%{_datadir}/hplip/ui
 
 %files libs
 %defattr(644,root,root,755)
