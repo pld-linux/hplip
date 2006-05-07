@@ -1,0 +1,71 @@
+#!/bin/sh
+#
+#
+# hplip		hplip
+#
+# chkconfig:	2345 80 20
+# description:	Startup/shutdown script for HPLIP
+# processname:	hpiod hpssd.py
+#
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get service config - may override defaults
+[ -f /etc/sysconfig/hplip ] && . /etc/sysconfig/hplip
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/hpiod ]; then
+		msg_starting hpiod
+		daemon /usr/sbin/hpiod
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/hpiod
+	else
+		msg_already_running hpiod
+	fi
+	if [ ! -f /var/lock/subsys/hpssd ]; then
+		msg_starting hpssd
+		daemon /usr/share/hplip/hpssd.py
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/hpssd
+	else
+		msg_already_running hpssd
+	fi
+	;;
+  stop)
+	# Stop daemons.
+	if [ -f /var/lock/subsys/hpiod ]; then
+		msg_stopping hpiod
+		killproc hpiod
+		rm -f /var/lock/subsys/hpiod >/dev/null 2>&1
+	else
+		msg_not_running hpiod
+	fi
+	if [ -f /var/lock/subsys/hpssd ]; then
+		msg_stopping hpssd
+		killproc hpssd.py
+		rm -f /var/lock/subsys/hpssd >/dev/null 2>&1
+	else
+		msg_not_running hpssd
+	fi
+	;;
+  restart)
+	$0 stop
+	$0 start
+	exit $?
+	;;
+  status)
+	status hpiod hpiod
+	status hpssd hpssd.py
+	exit $?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|status}"
+	exit 3
+esac
+
+exit $RETVAL
