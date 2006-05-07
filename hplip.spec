@@ -6,6 +6,7 @@
 #       - symlinks in /usr/bin for scripts from /usr/share/hplip
 #       - all scripts are in python, merge pyhton subpackage to main
 #       package ?
+#       - /usr/share/hplip/toolbox requires python-qt
 #
 # Conditional build:
 %bcond_without	cups	# without CUPS support
@@ -19,17 +20,18 @@ License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 # Source0-md5:	349489b10fb44d1bf105b04ff5352551
+Source1:	%{name}.init
 Patch0:		%{name}-0.9.10-2.patch
 URL:		http://hplip.sourceforge.net/
-BuildRequires:	automake
 BuildRequires:	autoconf
+BuildRequires:	automake
 %{?with_cups:BuildRequires:	cups-devel}
 BuildRequires:	libstdc++-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
-Conflicts:	ghostscript <= 7.00-3
 Obsoletes:	hpijs
+Conflicts:	ghostscript <= 7.00-3
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _ulibdir        %{_prefix}/lib
@@ -118,6 +120,8 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+
 %if %{with cups}
 install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
 	$RPM_BUILD_ROOT$(cups-config --serverbin)/filter
@@ -131,6 +135,8 @@ install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
 rm -f $RPM_BUILD_ROOT%{_cupsppddir}/foomatic-ppds
 mv $RPM_BUILD_ROOT{%{_datadir}/ppd/HP/*,%{_cupsppddir}}
 %endif
+
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/hplip
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -146,6 +152,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc hplip_readme.html
 %attr(755,root,root) %{_bindir}/hp*
 %attr(755,root,root) %{_sbindir}/hp*
+%attr(754,root,root) /etc/rc.d/init.d/hplip
 %dir %{_datadir}/hplip
 # info about GPL v2 for some files
 %{_datadir}/hplip/COPYING
