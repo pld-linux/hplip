@@ -1,0 +1,100 @@
+diff -uNr hplip-0.9.10.old/io/hpiod/device.cpp hplip-0.9.10.new/io/hpiod/device.cpp
+--- hplip-0.9.10.old/io/hpiod/device.cpp	2006-03-02 16:07:26.000000000 -0800
++++ hplip-0.9.10.new/io/hpiod/device.cpp	2006-04-20 08:27:57.243869888 -0700
+@@ -118,7 +118,7 @@
+  */
+ int Device::Write(int fd, const void *buf, int size)
+ {
+-   int len=0, r, ep;
++   int len=-EIO, r, ep;
+ 
+    if (FD[fd].pHD == NULL)
+    {
+@@ -145,10 +145,8 @@
+       FD[fd].urb_write.number_of_packets = 0;
+          
+       if (usb_submit_urb_ex(FD[fd].pHD, &FD[fd].urb_write))
+-      {
+-         syslog(LOG_ERR, "invalid submit_urb %s: %m %s %d\n", URI, __FILE__, __LINE__);
+          goto bugout;
+-      }
++
+       FD[fd].urb_write_active = 1;
+    }
+ 
+@@ -177,7 +175,7 @@
+ int Device::Read(int fd, void *buf, int size, int usec)
+ {
+    struct timeval t1, t2;
+-   int len=0, ep;
++   int len=-EIO, ep;
+    int r, total_usec, tmo_usec=usec;
+ 
+    if (FD[fd].pHD == NULL)
+@@ -210,21 +208,17 @@
+       FD[fd].urb_read.number_of_packets = 0;
+          
+       if (usb_submit_urb_ex(FD[fd].pHD, &FD[fd].urb_read))
+-      {
+-         syslog(LOG_ERR, "invalid submit_urb %s: %m %s %d\n", URI, __FILE__, __LINE__);
+          goto bugout;
+-      }
+ 
+       r = usb_wait_urb_ex(FD[fd].pHD, &FD[fd].urb_read, tmo_usec/1000);
+       if (r == -ETIMEDOUT)
+       {
+-         len = -1;
++         len = -ETIMEDOUT;
+          usb_reap_urb_ex(FD[fd].pHD, &FD[fd].urb_read);  /* remove urb */
+          goto bugout;
+       }
+       if (r < 0)
+       {
+-         len = -2;
+          syslog(LOG_ERR, "invalid urb read completion %s: %m %s %d\n", URI, __FILE__, __LINE__);
+          usb_reap_urb_ex(FD[fd].pHD, &FD[fd].urb_read);
+          goto bugout;
+@@ -239,7 +233,7 @@
+          total_usec += (t2.tv_usec > t1.tv_usec) ? t2.tv_usec - t1.tv_usec : t1.tv_usec - t2.tv_usec;
+          if (total_usec > usec)
+          {
+-            len = -1;   /* timeout */
++            len = -ETIMEDOUT;   /* timeout */
+             break;
+          }
+          tmo_usec = usec - total_usec;    /* decrease timeout */
+@@ -633,7 +627,7 @@
+    pSys->GeneralizeModel(sz, gen, sizeof(gen));
+ 
+    pSys->GetURIModel(uri, uriModel, sizeof(uriModel));
+-   if (strcmp(uriModel, gen) != 0)
++   if (strcasecmp(uriModel, gen) != 0)
+       goto bugout;
+ 
+    if (usb_get_string_simple(hd, dev->descriptor.iSerialNumber, sz, sizeof(sz)) < 0)
+@@ -846,8 +840,6 @@
+ 
+ int Device::Open(char *sendBuf, int *result)
+ {
+-   char uriModel[128];
+-   char model[128];
+    int len=0;
+    int config, interface, altset;
+ 
+@@ -910,16 +902,6 @@
+       }        
+    }
+ 
+-   /* Make sure uri model still matches device id model. */
+-   pSys->GetURIModel(URI, uriModel, sizeof(uriModel));
+-   pSys->GetModel(ID, model, sizeof(model));
+-   if (strcmp(uriModel, model) != 0)
+-   {
+-      *result = R_INVALID_DEVICE_NODE;  /* found different device plugged in */  
+-      syslog(LOG_ERR, "invalid model %s != %s Device::Open %s %d\n", uriModel, model, __FILE__, __LINE__);
+-      goto blackout;
+-   }
+-
+ blackout:
+    pthread_mutex_unlock(&mutex);
+ 
