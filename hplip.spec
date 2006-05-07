@@ -15,7 +15,7 @@ Summary(pl):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	0.9.10
 Release:	0.1
-License:	BSD and GPL v2 
+License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 # Source0-md5:	349489b10fb44d1bf105b04ff5352551
