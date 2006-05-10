@@ -14,14 +14,13 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	0.9.10
+Version:	0.9.11
 Release:	0.1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	349489b10fb44d1bf105b04ff5352551
+# Source0-md5:	5cf362c972d5b1733af4fb8e2ade92e4
 Source1:	%{name}.init
-Patch0:		%{name}-0.9.10-2.patch
 URL:		http://hplip.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -107,7 +106,6 @@ Interfejs Pythonowy do HPLIP.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 install /usr/share/automake/config.* .
@@ -160,8 +158,8 @@ rm -rf $RPM_BUILD_ROOT
 #%{_datadir}/hplip/hplip
 #%{_datadir}/hplip/hplip.sh
 %{_datadir}/hplip/__init__.py
-%{_datadir}/hplip/*.png
-%{_datadir}/hplip/*.html
+#%{_datadir}/hplip/*.png
+#%{_datadir}/hplip/*.html
 %attr(755,root,root) %{_datadir}/hplip/align
 %attr(755,root,root) %{_datadir}/hplip/check
 %attr(755,root,root) %{_datadir}/hplip/clean
