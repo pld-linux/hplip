@@ -1,12 +1,7 @@
 # TODO:
-#	- Review unpackaged files
-#       - write initscript (based on /usr/share/hplip/hplip
 #       - add desktop file for toolbox
-#       - "env python" -> "/usr/bin/python"
-#       - symlinks in /usr/bin for scripts from /usr/share/hplip
-#       - all scripts are in python, merge pyhton subpackage to main
-#       package ?
-#       - /usr/share/hplip/toolbox requires python-qt
+#       - GUI tools require python-qt, they should be separated to a subpackage
+#         (the rest of package works without Qt)
 #
 # Conditional build:
 %bcond_without	cups	# without CUPS support
@@ -15,12 +10,13 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	0.9.11
-Release:	0.1
+Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 # Source0-md5:	5cf362c972d5b1733af4fb8e2ade92e4
 Source1:	%{name}.init
+Patch0:		%{name}-DJ670C.patch
 URL:		http://hplip.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -30,7 +26,10 @@ BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
+BuildRequires:  sane-backends-devel
+Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	hpijs
+Obsoletes:	python-hplip
 Conflicts:	ghostscript <= 7.00-3
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -63,6 +62,9 @@ Biblioteki HPLIP.
 Summary:	HPLIP SANE Libraries
 Summary(pl):	Biblioteki HPLIP SANE
 Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires(post):	/bin/grep
+Requires(postun): /bin/sed
 
 %description sane
 HPLIP SANE Libraries.
@@ -87,6 +89,7 @@ Summary:	HP backend for CUPS
 Summary(pl):	Backend HP dla CUPS-a
 Group:		Applications/Printing
 Requires:	cups
+Requires:	%{name} = %{version}-%{release}
 
 %description -n cups-backend-hp
 This package allow CUPS printing on HP printers.
@@ -94,19 +97,11 @@ This package allow CUPS printing on HP printers.
 %description -n cups-backend-hp -l pl
 Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach HP.
 
-%package -n python-%{name}
-Summary:	Python HPLIP bindings
-Summary(pl):	Interfejs Pythonowy do HPLIP
-Group:		Development/Languages/Python
-
-%description -n python-%{name}
-Python HPLIP bindings.
-
-%description -n python-%{name} -l pl
-Interfejs Pythonowy do HPLIP.
-
 %prep
 %setup -q
+%patch0 -p1
+
+sed -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 
 %build
 install /usr/share/automake/config.* .
@@ -115,11 +110,13 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
 	--enable-foomatic-install \
 	%{!?with_cups:--disable-cups-install}
-%{__make}
+%{__make} \
+	hpppddir=/usr/share/cups/model \
+	hpppddir=%{_cupsppddir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/hp}
 
 %if %{with cups}
 install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
@@ -128,14 +125,27 @@ install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	rpm_install=yes
+	rpm_install=yes \
+	hpppddir=%{_cupsppddir}
 
 %if %{with cups}
 rm -f $RPM_BUILD_ROOT%{_cupsppddir}/foomatic-ppds
 mv $RPM_BUILD_ROOT{%{_datadir}/ppd/HP/*,%{_cupsppddir}}
 %endif
 
+ln -sf %{_datadir}/%{name}/hpssd.py $RPM_BUILD_ROOT/%{_sbindir}/hpssd
+ln -sf %{_datadir}/%{name}/setup $RPM_BUILD_ROOT/%{_sbindir}/hp-setup
+
+for tool in align clean colorcal fab info levels makeuri photo print \
+		sendfax testpage toolbox unload ; do
+	ln -sf %{_datadir}/%{name}/$tool $RPM_BUILD_ROOT/%{_bindir}/hp-$tool
+done
+
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/hplip
+
+mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/%{name}.conf,%{_sysconfdir}/hp}
+rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,/usr/share/doc/hpijs*} \
+	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},/etc/sane.d/*}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -143,8 +153,13 @@ rm -rf $RPM_BUILD_ROOT
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
-%post sane -p /sbin/ldconfig
-%postun sane -p /sbin/ldconfig
+%post sane
+/bin/grep -q '^hpaio' /etc/sane.d/dll.conf || echo hpaio >> /etc/sane.d/dll.conf
+
+%postun sane 
+if [ "$1" = "0" ]; then
+	/bin/sed -e'/^hpaio/d' -i /etc/sane.d/dll.conf || :
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -187,6 +202,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/hplip/prnt
 %{_datadir}/hplip/scan
 %{_datadir}/hplip/ui
+%attr(755,root,root) %{py_sitedir}/*.so
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
 
 %files libs
 %defattr(644,root,root,755)
@@ -195,10 +212,6 @@ rm -rf $RPM_BUILD_ROOT
 %files sane
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsane*.so.*
-
-%files -n python-%{name}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{py_sitedir}/*.so
 
 %if %{with cups}
 %files ppd
