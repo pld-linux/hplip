@@ -29,7 +29,7 @@ case "$1" in
 	fi
 	if [ ! -f /var/lock/subsys/hpssd ]; then
 		msg_starting hpssd
-		daemon /usr/share/hplip/hpssd.py
+		daemon /usr/sbin/hpssd
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/hpssd
 	else
@@ -47,7 +47,7 @@ case "$1" in
 	fi
 	if [ -f /var/lock/subsys/hpssd ]; then
 		msg_stopping hpssd
-		killproc hpssd.py
+		killproc hpssd
 		rm -f /var/lock/subsys/hpssd >/dev/null 2>&1
 	else
 		msg_not_running hpssd
@@ -60,7 +60,7 @@ case "$1" in
 	;;
   status)
 	status hpiod hpiod
-	status hpssd hpssd.py
+	status hpssd hpssd
 	exit $?
 	;;
   *)
