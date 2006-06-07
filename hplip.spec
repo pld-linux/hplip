@@ -148,7 +148,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc hplip_readme.html
+%doc doc/*
 %attr(755,root,root) %{_bindir}/hp*
 %attr(755,root,root) %{_sbindir}/hp*
 %attr(754,root,root) /etc/rc.d/init.d/hplip
