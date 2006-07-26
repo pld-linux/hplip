@@ -26,7 +26,7 @@ BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
-BuildRequires:  sane-backends-devel
+BuildRequires:	sane-backends-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	hpijs
 Obsoletes:	python-hplip
@@ -62,9 +62,9 @@ Biblioteki HPLIP.
 Summary:	HPLIP SANE Libraries
 Summary(pl):	Biblioteki HPLIP SANE
 Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
 Requires(post):	/bin/grep
-Requires(postun): /bin/sed
+Requires(postun):	/bin/sed
+Requires:	%{name} = %{version}-%{release}
 
 %description sane
 HPLIP SANE Libraries.
@@ -88,8 +88,8 @@ Baza danych PPD dla drukarek Hewlett Packard.
 Summary:	HP backend for CUPS
 Summary(pl):	Backend HP dla CUPS-a
 Group:		Applications/Printing
-Requires:	cups
 Requires:	%{name} = %{version}-%{release}
+Requires:	cups
 
 %description -n cups-backend-hp
 This package allow CUPS printing on HP printers.
@@ -133,19 +133,19 @@ rm -f $RPM_BUILD_ROOT%{_cupsppddir}/foomatic-ppds
 mv $RPM_BUILD_ROOT{%{_datadir}/ppd/HP/*,%{_cupsppddir}}
 %endif
 
-ln -sf %{_datadir}/%{name}/hpssd.py $RPM_BUILD_ROOT/%{_sbindir}/hpssd
-ln -sf %{_datadir}/%{name}/setup $RPM_BUILD_ROOT/%{_sbindir}/hp-setup
+ln -sf %{_datadir}/%{name}/hpssd.py $RPM_BUILD_ROOT%{_sbindir}/hpssd
+ln -sf %{_datadir}/%{name}/setup $RPM_BUILD_ROOT%{_sbindir}/hp-setup
 
 for tool in align clean colorcal fab info levels makeuri photo print \
 		sendfax testpage toolbox unload ; do
-	ln -sf %{_datadir}/%{name}/$tool $RPM_BUILD_ROOT/%{_bindir}/hp-$tool
+	ln -sf %{_datadir}/%{name}/$tool $RPM_BUILD_ROOT%{_bindir}/hp-$tool
 done
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/hplip
 
 mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/%{name}.conf,%{_sysconfdir}/hp}
-rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,/usr/share/doc/hpijs*} \
-	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},/etc/sane.d/*}
+rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*} \
+	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},%{_sysconfdir}/sane.d/*}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -156,7 +156,7 @@ rm -rf $RPM_BUILD_ROOT
 %post sane
 /bin/grep -q '^hpaio' /etc/sane.d/dll.conf || echo hpaio >> /etc/sane.d/dll.conf
 
-%postun sane 
+%postun sane
 if [ "$1" = "0" ]; then
 	/bin/sed -e'/^hpaio/d' -i /etc/sane.d/dll.conf || :
 fi
