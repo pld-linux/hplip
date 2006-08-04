@@ -9,12 +9,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	0.9.11
+Version:	1.6.7
 Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	5cf362c972d5b1733af4fb8e2ade92e4
+# Source0-md5:	b1e814c7f5ef2a5033e4c3e5162ac694
 Source1:	%{name}.init
 Patch0:		%{name}-DJ670C.patch
 URL:		http://hplip.sourceforge.net/
@@ -174,6 +174,8 @@ fi
 #%{_datadir}/hplip/hplip
 #%{_datadir}/hplip/hplip.sh
 %{_datadir}/hplip/__init__.py
+%dir %{_datadir}/hplip/copier
+%{_datadir}/hplip/copier/*.py
 #%{_datadir}/hplip/*.png
 #%{_datadir}/hplip/*.html
 %attr(755,root,root) %{_datadir}/hplip/align
@@ -185,7 +187,7 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/info
 %attr(755,root,root) %{_datadir}/hplip/levels
 %attr(755,root,root) %{_datadir}/hplip/makeuri
-%attr(755,root,root) %{_datadir}/hplip/photo
+%attr(755,root,root) %{_datadir}/hplip/makecopies
 %attr(755,root,root) %{_datadir}/hplip/print
 %attr(755,root,root) %{_datadir}/hplip/sendfax
 %attr(755,root,root) %{_datadir}/hplip/setup
@@ -212,6 +214,7 @@ fi
 %files sane
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsane*.so.*
+%{_datadir}/hplip/hpaio.desc
 
 %if %{with cups}
 %files ppd
