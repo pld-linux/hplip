@@ -9,18 +9,19 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	1.6.7
-Release:	3
+Version:	1.6.9
+Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	b1e814c7f5ef2a5033e4c3e5162ac694
+# Source0-md5:	38d57f58b48b5b0729d1de507776e7d1
 Source1:	%{name}.init
-Patch0:		%{name}-DJ670C.patch
+Source2:	%{name}-DJ670C.xml
 URL:		http://hplip.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
 %{?with_cups:BuildRequires:	cups-devel}
+BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
@@ -99,11 +100,10 @@ Ten pakiet umo¿liwia drukowanie z poziomu CUPS-a na drukarkach HP.
 
 %prep
 %setup -q
-%patch0 -p1
-
 sed -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 
 %build
+install %{SOURCE2} data/xml
 install /usr/share/automake/config.* .
 install /usr/share/automake/config.* prnt
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
