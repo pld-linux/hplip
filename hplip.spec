@@ -27,6 +27,7 @@ BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
+BuildRequires:	python-modules
 BuildRequires:	sane-backends-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	hpijs
