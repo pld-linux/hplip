@@ -10,7 +10,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	1.6.9
-Release:	1
+Release:	2
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -206,6 +206,7 @@ fi
 %{_datadir}/hplip/scan
 %{_datadir}/hplip/ui
 %attr(755,root,root) %{py_sitedir}/*.so
+%dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
 
 %files libs
