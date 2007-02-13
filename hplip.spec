@@ -7,7 +7,7 @@
 %bcond_without	cups	# without CUPS support
 #
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
-Summary(pl.UTF-8):   Serwer dla drukarek HP Inkjet
+Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	1.6.9
 Release:	2
@@ -51,7 +51,7 @@ to the consumer and small business desktop Linux users.
 
 %package libs
 Summary:	HPLIP Libraries
-Summary(pl.UTF-8):   Biblioteki HPLIP
+Summary(pl.UTF-8):	Biblioteki HPLIP
 Group:		Libraries
 
 %description libs
@@ -62,7 +62,7 @@ Biblioteki HPLIP.
 
 %package sane
 Summary:	HPLIP SANE Libraries
-Summary(pl.UTF-8):   Biblioteki HPLIP SANE
+Summary(pl.UTF-8):	Biblioteki HPLIP SANE
 Group:		Libraries
 Requires(post):	/bin/grep
 Requires(postun):	/bin/sed
@@ -76,7 +76,7 @@ Biblioteki HPLIP SANE.
 
 %package ppd
 Summary:	PPD database for Hewlett Packard printers
-Summary(pl.UTF-8):   Baza danych PPD dla drukarek Hewlett Packard
+Summary(pl.UTF-8):	Baza danych PPD dla drukarek Hewlett Packard
 Group:		Applications/System
 Requires:	cups
 
@@ -88,7 +88,7 @@ Baza danych PPD dla drukarek Hewlett Packard.
 
 %package -n cups-backend-hp
 Summary:	HP backend for CUPS
-Summary(pl.UTF-8):   Backend HP dla CUPS-a
+Summary(pl.UTF-8):	Backend HP dla CUPS-a
 Group:		Applications/Printing
 Requires:	%{name} = %{version}-%{release}
 Requires:	cups
