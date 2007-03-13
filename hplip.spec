@@ -2,19 +2,20 @@
 #       - add desktop file for toolbox
 #       - GUI tools require python-qt, they should be separated to a subpackage
 #         (the rest of package works without Qt)
-#
+#       - check if symlinks /usr/lib/sane/libsane-hpaio.so.1 -> ../libsane-hpaio.so.1.0.0
+#         are "right way" of making them available to sane.
 # Conditional build:
 %bcond_without	cups	# without CUPS support
 #
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	1.6.9
-Release:	2
+Version:	1.7.2
+Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	38d57f58b48b5b0729d1de507776e7d1
+# Source0-md5:	739a9cef41ca655ad98bc35a39c0517e
 Source1:	%{name}.init
 Source2:	%{name}-DJ670C.xml
 URL:		http://hplip.sourceforge.net/
@@ -216,6 +217,7 @@ fi
 %files sane
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsane*.so.*
+%attr(755,root,root) %{_libdir}/sane/libsane*.so.*
 %{_datadir}/hplip/hpaio.desc
 
 %if %{with cups}
