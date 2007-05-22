@@ -14,12 +14,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	1.7.3
-Release:	3
+Version:	1.7.4a
+Release:	0.1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	6921d256c9efc37446f5d2fad71979f8
+# Source0-md5:	210e948d1f1f376426a2cca0ed9d1e6c
 Source1:	%{name}.init
 Source2:	%{name}-DJ670C.xml
 URL:		http://hplip.sourceforge.net/
@@ -111,6 +111,7 @@ Summary:	PPD database for Hewlett Packard printers
 Summary(pl.UTF-8):	Baza danych PPD dla drukarek Hewlett Packard
 Group:		Applications/System
 Requires:	cups
+Obsoletes:	hpijs-ppd
 
 %description ppd
 PPD database for Hewlett Packard printers.
@@ -130,6 +131,16 @@ This package allow CUPS printing on HP printers.
 
 %description -n cups-backend-hp -l pl.UTF-8
 Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach HP.
+
+%package -n cups-backend-hpfax
+Summary:	HP fax backend for CUPS
+Summary(pl):	Backend HP fax dla CUPS-a
+Group:		Applications/Printing
+Requires:	%{name} = %{version}-%{release}
+Requires:	cups
+
+%description -n cups-backend-hpfax
+This package allow CUPS faxing using HP AiO devices.
 
 %prep
 %setup -q
@@ -252,9 +263,13 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/testpage
 %attr(755,root,root) %{_datadir}/hplip/timedate
 %attr(755,root,root) %{_datadir}/hplip/unload
+%attr(755,root,root) %{_datadir}/hplip/hplip-install
+%{_datadir}/hplip/install.py
 %{_datadir}/hplip/base
 # need look
 %{_datadir}/hplip/data
+%{_datadir}/hplip/probe
+%{_datadir}/hplip/timedate
 # fax subpackage ?
 %{_datadir}/hplip/fax
 %{_datadir}/hplip/pcard
@@ -297,4 +312,8 @@ fi
 %files -n cups-backend-hp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/hp
+
+%files -n cups-backend-hpfax
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_ulibdir}/cups/backend/hpfax
 %endif
