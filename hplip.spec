@@ -142,6 +142,10 @@ Requires:	cups
 %description -n cups-backend-hpfax
 This package allow CUPS faxing using HP AiO devices.
 
+%description -n cups-backend-hpfax -l pl.UTF-8
+Ten pakiet umożliwia wysyłanie faksów z poziomu CUPS-a poprzez
+urządzenia HP AiO.
+
 %prep
 %setup -q
 sed -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
