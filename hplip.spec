@@ -1,12 +1,10 @@
 # TODO:
 #	- add desktop file for toolbox
 #	- check if all GUI tools were separated
-#	- check for all files required by daemon package (or Reqs)
 #	- prepare fax packages for fax utilities
 #	- check if symlinks /usr/lib/sane/libsane-hpaio.so.1 -> ../libsane-hpaio.so.1.0.0
 #	  are "right way" of making them available to sane.
 #	- separate package for hpijs (hplip Req: hpijs, hplip-hpijs Prov: hpijs?)
-#	- hp-checks looks for installer module (unpackaged files?)
 #	- installed but unpackaged
 #		   /usr/lib/python2.5/site-packages/cupsext.la
 #		   /usr/lib/python2.5/site-packages/hpmudext.la
@@ -166,15 +164,15 @@ install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
 	rpm_install=yes \
 	hpppddir=%{_cupsppddir}
 
-for tool in align clean check colorcal fab firmware info levels makecopies makeuri print \
-		probe sendfax setup testpage timedate toolbox unload ; do
+for tool in align clean colorcal fab firmware info levels makecopies makeuri print \
+		probe scan sendfax setup testpage timedate toolbox unload ; do
 	ln -sf %{_datadir}/%{name}/$tool.py $RPM_BUILD_ROOT%{_bindir}/hp-$tool
 done
 
 rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*} \
 	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},%{_sysconfdir}/sane.d/*} \
 	$RPM_BUILD_ROOT/etc/init.d
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{installer,install.py,hplip-install}
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{check.py,installer,install.py,hplip-install}
 rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
 
 %clean
@@ -198,7 +196,6 @@ fi
 %attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
 %attr(755,root,root) %{_bindir}/hp-clean
-%attr(755,root,root) %{_bindir}/hp-check
 %attr(755,root,root) %{_bindir}/hp-colorcal
 %attr(755,root,root) %{_bindir}/hp-firmware
 %attr(755,root,root) %{_bindir}/hp-info
@@ -207,6 +204,7 @@ fi
 %attr(755,root,root) %{_bindir}/hp-makeuri
 %attr(755,root,root) %{_bindir}/hp-print
 %attr(755,root,root) %{_bindir}/hp-probe
+%attr(755,root,root) %{_bindir}/hp-scan
 %attr(755,root,root) %{_bindir}/hp-sendfax
 %attr(755,root,root) %{_bindir}/hp-setup
 %attr(755,root,root) %{_bindir}/hp-testpage
@@ -224,7 +222,6 @@ fi
 #%{_datadir}/hplip/*.png
 #%{_datadir}/hplip/*.html
 %attr(755,root,root) %{_datadir}/hplip/align.py
-%attr(755,root,root) %{_datadir}/hplip/check.py
 %attr(755,root,root) %{_datadir}/hplip/clean.py
 %attr(755,root,root) %{_datadir}/hplip/colorcal.py
 %attr(755,root,root) %{_datadir}/hplip/firmware.py
