@@ -178,11 +178,11 @@ install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
 
 %if %{with cups}
 rm -f $RPM_BUILD_ROOT%{_cupsppddir}/foomatic-ppds
-mv $RPM_BUILD_ROOT{%{_datadir}/ppd/HP/*,%{_cupsppddir}}
+#mv $RPM_BUILD_ROOT{%{_datadir}/ppd/HP/*,%{_cupsppddir}}
 %endif
 
-ln -sf %{_datadir}/%{name}/hpssd.py $RPM_BUILD_ROOT%{_sbindir}/hpssd
-ln -sf %{_datadir}/%{name}/setup $RPM_BUILD_ROOT%{_sbindir}/hp-setup
+#ln -sf %{_datadir}/%{name}/hpssd.py $RPM_BUILD_ROOT%{_sbindir}/hpssd
+#ln -sf %{_datadir}/%{name}/setup $RPM_BUILD_ROOT%{_sbindir}/hp-setup
 
 for tool in align clean check colorcal fab firmware info levels makecopies makeuri print \
 		probe sendfax setup testpage timedate toolbox unload ; do
@@ -191,7 +191,7 @@ done
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/hplip
 
-mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/%{name}.conf,%{_sysconfdir}/hp}
+#mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/%{name}.conf,%{_sysconfdir}/hp}
 rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*} \
 	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},%{_sysconfdir}/sane.d/*} \
 	$RPM_BUILD_ROOT/etc/init.d
@@ -242,7 +242,7 @@ fi
 %attr(755,root,root) %{_bindir}/hp-unload
 %dir %{_datadir}/hplip
 # info about GPL v2 for some files
-%{_datadir}/hplip/COPYING
+#%{_datadir}/hplip/COPYING
 # initscript for hplip helpers
 #%{_datadir}/hplip/hplip
 #%{_datadir}/hplip/hplip.sh
@@ -251,29 +251,27 @@ fi
 %{_datadir}/hplip/copier/*.py
 #%{_datadir}/hplip/*.png
 #%{_datadir}/hplip/*.html
-%attr(755,root,root) %{_datadir}/hplip/align
-%attr(755,root,root) %{_datadir}/hplip/check
-%attr(755,root,root) %{_datadir}/hplip/clean
-%attr(755,root,root) %{_datadir}/hplip/colorcal
-%attr(755,root,root) %{_datadir}/hplip/firmware
-%attr(755,root,root) %{_datadir}/hplip/info
-%attr(755,root,root) %{_datadir}/hplip/levels
-%attr(755,root,root) %{_datadir}/hplip/makeuri
-%attr(755,root,root) %{_datadir}/hplip/makecopies
-%attr(755,root,root) %{_datadir}/hplip/print
-%attr(755,root,root) %{_datadir}/hplip/probe
-%attr(755,root,root) %{_datadir}/hplip/sendfax
-%attr(755,root,root) %{_datadir}/hplip/setup
-%attr(755,root,root) %{_datadir}/hplip/testpage
-%attr(755,root,root) %{_datadir}/hplip/timedate
-%attr(755,root,root) %{_datadir}/hplip/unload
+%attr(755,root,root) %{_datadir}/hplip/align.py
+%attr(755,root,root) %{_datadir}/hplip/check.py
+%attr(755,root,root) %{_datadir}/hplip/clean.py
+%attr(755,root,root) %{_datadir}/hplip/colorcal.py
+%attr(755,root,root) %{_datadir}/hplip/firmware.py
+%attr(755,root,root) %{_datadir}/hplip/info.py
+%attr(755,root,root) %{_datadir}/hplip/levels.py
+%attr(755,root,root) %{_datadir}/hplip/makeuri.py
+%attr(755,root,root) %{_datadir}/hplip/makecopies.py
+%attr(755,root,root) %{_datadir}/hplip/print.py
+%attr(755,root,root) %{_datadir}/hplip/probe.py
+%attr(755,root,root) %{_datadir}/hplip/sendfax.py
+%attr(755,root,root) %{_datadir}/hplip/setup.py
+%attr(755,root,root) %{_datadir}/hplip/testpage.py
+%attr(755,root,root) %{_datadir}/hplip/timedate.py
+%attr(755,root,root) %{_datadir}/hplip/unload.py
 %attr(755,root,root) %{_datadir}/hplip/hplip-install
 %{_datadir}/hplip/install.py
 %{_datadir}/hplip/base
 # need look
 %{_datadir}/hplip/data
-%{_datadir}/hplip/probe
-%{_datadir}/hplip/timedate
 # fax subpackage ?
 %{_datadir}/hplip/fax
 %{_datadir}/hplip/pcard
@@ -287,7 +285,7 @@ fi
 
 %files daemon
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_sbindir}/hp*
+#%attr(755,root,root) %{_sbindir}/hp*
 %attr(754,root,root) /etc/rc.d/init.d/hplip
 %attr(755,root,root) %{_datadir}/hplip/hpssd.py
 
@@ -295,8 +293,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/hp-fab
 %attr(755,root,root) %{_bindir}/hp-toolbox
-%attr(755,root,root) %{_datadir}/hplip/fab
-%attr(755,root,root) %{_datadir}/hplip/toolbox
+%attr(755,root,root) %{_datadir}/hplip/fab.py
+%attr(755,root,root) %{_datadir}/hplip/toolbox.py
 
 %files libs
 %defattr(644,root,root,755)
@@ -304,8 +302,8 @@ fi
 
 %files sane
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libsane*.so.*
-%attr(755,root,root) %{_libdir}/sane/libsane*.so.*
+#%attr(755,root,root) %{_libdir}/libsane*.so.*
+#%attr(755,root,root) %{_libdir}/sane/libsane*.so.*
 %{_datadir}/hplip/hpaio.desc
 
 %if %{with cups}
