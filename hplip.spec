@@ -1,9 +1,6 @@
 # TODO:
 #	- add desktop file for toolbox
-#	- check if all GUI tools were separated
 #	- prepare fax packages for fax utilities
-#	- check if symlinks /usr/lib/sane/libsane-hpaio.so.1 -> ../libsane-hpaio.so.1.0.0
-#	  are "right way" of making them available to sane.
 #	- separate package for hpijs (hplip Req: hpijs, hplip-hpijs Prov: hpijs?)
 #	- installed but unpackaged
 #		   /usr/lib/python2.5/site-packages/cupsext.la
@@ -278,7 +275,6 @@ fi
 
 %files sane
 %defattr(644,root,root,755)
-#%attr(755,root,root) %{_libdir}/libsane*.so.*
 %attr(755,root,root) %{_libdir}/sane/libsane*.so.*
 %{_datadir}/hplip/hpaio.desc
 
