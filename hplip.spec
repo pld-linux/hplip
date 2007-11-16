@@ -7,6 +7,12 @@
 #	  are "right way" of making them available to sane.
 #	- separate package for hpijs (hplip Req: hpijs, hplip-hpijs Prov: hpijs?)
 #	- hp-checks looks for installer module (unpackaged files?)
+#	- installed but unpackaged
+#		   /usr/lib/python2.5/site-packages/cupsext.la
+#		   /usr/lib/python2.5/site-packages/hpmudext.la
+#		   /usr/lib/python2.5/site-packages/pcardext.la
+#		   /usr/lib/python2.5/site-packages/scanext.la
+#		   /usr/share/applications/hplip.desktop
 #
 # Conditional build:
 %bcond_without	cups	# without CUPS support
@@ -196,6 +202,8 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/hplip
 rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*} \
 	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},%{_sysconfdir}/sane.d/*} \
 	$RPM_BUILD_ROOT/etc/init.d
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/installer
+rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -224,6 +232,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc doc/*
+%{_sysconfdir}/udev/rules.d/*
 %attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
 %attr(755,root,root) %{_bindir}/hp-clean
@@ -263,6 +272,7 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/makecopies.py
 %attr(755,root,root) %{_datadir}/hplip/print.py
 %attr(755,root,root) %{_datadir}/hplip/probe.py
+%attr(755,root,root) %{_datadir}/hplip/scan.py
 %attr(755,root,root) %{_datadir}/hplip/sendfax.py
 %attr(755,root,root) %{_datadir}/hplip/setup.py
 %attr(755,root,root) %{_datadir}/hplip/testpage.py
@@ -300,11 +310,12 @@ fi
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libhpip*.so.*
+%attr(755,root,root) %{_libdir}/libhpmud*.so.*
 
 %files sane
 %defattr(644,root,root,755)
 #%attr(755,root,root) %{_libdir}/libsane*.so.*
-#%attr(755,root,root) %{_libdir}/sane/libsane*.so.*
+%attr(755,root,root) %{_libdir}/sane/libsane*.so.*
 %{_datadir}/hplip/hpaio.desc
 
 %if %{with cups}
