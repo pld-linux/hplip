@@ -172,11 +172,6 @@ install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
 	rpm_install=yes \
 	hpppddir=%{_cupsppddir}
 
-%if %{with cups}
-rm -f $RPM_BUILD_ROOT%{_cupsppddir}/foomatic-ppds
-#mv $RPM_BUILD_ROOT{%{_datadir}/ppd/HP/*,%{_cupsppddir}}
-%endif
-
 for tool in align clean check colorcal fab firmware info levels makecopies makeuri print \
 		probe sendfax setup testpage timedate toolbox unload ; do
 	ln -sf %{_datadir}/%{name}/$tool.py $RPM_BUILD_ROOT%{_bindir}/hp-$tool
