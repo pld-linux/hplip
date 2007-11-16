@@ -14,6 +14,7 @@
 #		   /usr/lib/python2.5/site-packages/scanext.la
 #		   /usr/share/applications/hplip.desktop
 #	- it would be good to kill "python /usr/share/hplip/hpssd.py" during upgrade/uninstall
+#	- hpaio.desc removed in Fedora
 #
 # Conditional build:
 %bcond_without	cups	# without CUPS support
@@ -180,21 +181,16 @@ rm -f $RPM_BUILD_ROOT%{_cupsppddir}/foomatic-ppds
 #mv $RPM_BUILD_ROOT{%{_datadir}/ppd/HP/*,%{_cupsppddir}}
 %endif
 
-#ln -sf %{_datadir}/%{name}/hpssd.py $RPM_BUILD_ROOT%{_sbindir}/hpssd
-#ln -sf %{_datadir}/%{name}/setup $RPM_BUILD_ROOT%{_sbindir}/hp-setup
-
 for tool in align clean check colorcal fab firmware info levels makecopies makeuri print \
 		probe sendfax setup testpage timedate toolbox unload ; do
 	ln -sf %{_datadir}/%{name}/$tool.py $RPM_BUILD_ROOT%{_bindir}/hp-$tool
 done
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/hplip
-
 #mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/%{name}.conf,%{_sysconfdir}/hp}
 rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*} \
 	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},%{_sysconfdir}/sane.d/*} \
 	$RPM_BUILD_ROOT/etc/init.d
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/installer
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{installer,install.py,hplip-install}
 rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
 
 %clean
@@ -261,8 +257,6 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/testpage.py
 %attr(755,root,root) %{_datadir}/hplip/timedate.py
 %attr(755,root,root) %{_datadir}/hplip/unload.py
-%attr(755,root,root) %{_datadir}/hplip/hplip-install
-%{_datadir}/hplip/install.py
 %{_datadir}/hplip/base
 # need look
 %{_datadir}/hplip/data
