@@ -46,6 +46,8 @@ Requires:	python-modules
 Obsoletes:	hpijs
 Obsoletes:	python-hplip
 Conflicts:	ghostscript <= 7.00-3
+# used in scan.py
+Suggests:	python-ReportLab >= 2.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _ulibdir        %{_prefix}/lib
