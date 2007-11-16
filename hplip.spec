@@ -156,6 +156,7 @@ install /usr/share/automake/config.* .
 install /usr/share/automake/config.* prnt
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
+	--disable-foomatic-xml-install \
 	--enable-foomatic-install \
 	%{!?with_cups:--disable-cups-install}
 %{__make} \
