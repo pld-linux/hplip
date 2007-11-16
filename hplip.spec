@@ -17,7 +17,6 @@
 #	- hpaio.desc removed in Fedora
 #
 # Conditional build:
-%bcond_without	cups	# without CUPS support
 #
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
@@ -31,7 +30,7 @@ Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 URL:		http://hplip.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
-%{?with_cups:BuildRequires:	cups-devel}
+BuildRequires:	cups-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libusb-devel
@@ -53,10 +52,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _ulibdir        %{_prefix}/lib
 
-%if %{with cups}
 %define 	_cupsdir 	%(cups-config --datadir)
 %define		_cupsppddir	%{_cupsdir}/model
-%endif
 
 %description
 The Hewlett-Packard Linux Imaging and Printing project (HPLIP)
@@ -153,8 +150,7 @@ install /usr/share/automake/config.* prnt
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
 	--disable-foomatic-xml-install \
-	--enable-foomatic-ppd-install \
-	%{!?with_cups:--disable-cups-install}
+	--enable-foomatic-ppd-install
 %{__make} \
 	hpppddir=/usr/share/cups/model \
 	hpppddir=%{_cupsppddir}
@@ -162,10 +158,8 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%if %{with cups}
 install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
 	$RPM_BUILD_ROOT$(cups-config --serverbin)/filter
-%endif
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -257,7 +251,10 @@ fi
 %{_datadir}/hplip/prnt
 %{_datadir}/hplip/scan
 %{_datadir}/hplip/ui
-%attr(755,root,root) %{py_sitedir}/*.so
+%attr(755,root,root) %{py_sitedir}/cupsext.so
+%attr(755,root,root) %{py_sitedir}/hpmudext.so
+%attr(755,root,root) %{py_sitedir}/pcardext.so
+%attr(755,root,root) %{py_sitedir}/scanext.so
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
 
@@ -280,7 +277,6 @@ fi
 %attr(755,root,root) %{_libdir}/sane/libsane*.so.*
 %{_datadir}/hplip/hpaio.desc
 
-%if %{with cups}
 %files ppd
 %defattr(644,root,root,755)
 %{_cupsppddir}/*
@@ -292,4 +288,3 @@ fi
 %files -n cups-backend-hpfax
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/hpfax
-%endif
