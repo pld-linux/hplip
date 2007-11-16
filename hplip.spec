@@ -172,7 +172,7 @@ done
 rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*} \
 	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},%{_sysconfdir}/sane.d/*} \
 	$RPM_BUILD_ROOT/etc/init.d
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{check.py,installer,install.py,hplip-install}
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{check.py,install.py,hplip-install}
 rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
 
 %clean
@@ -243,6 +243,7 @@ fi
 %{_datadir}/hplip/data
 # fax subpackage ?
 %{_datadir}/hplip/fax
+%{_datadir}/hplip/installer
 %{_datadir}/hplip/pcard
 %{_datadir}/hplip/plugins
 %{_datadir}/hplip/prnt
