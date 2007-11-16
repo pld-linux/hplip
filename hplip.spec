@@ -20,11 +20,12 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	2.7.10
-Release:	0.3
+Release:	0.4
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 # Source0-md5:	eafb815ca4b4bb5a2f35a76ee3c2dc72
+Patch0:		%{name}-ui-optional.patch
 URL:		http://hplip.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -140,6 +141,7 @@ urządzenia HP AiO.
 
 %prep
 %setup -q
+%patch0 -p1
 sed -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 
 %build
@@ -202,7 +204,6 @@ fi
 %attr(755,root,root) %{_bindir}/hp-levels
 %attr(755,root,root) %{_bindir}/hp-makecopies
 %attr(755,root,root) %{_bindir}/hp-makeuri
-%attr(755,root,root) %{_bindir}/hp-print
 %attr(755,root,root) %{_bindir}/hp-probe
 %attr(755,root,root) %{_bindir}/hp-scan
 %attr(755,root,root) %{_bindir}/hp-sendfax
@@ -230,7 +231,6 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/levels.py
 %attr(755,root,root) %{_datadir}/hplip/makeuri.py
 %attr(755,root,root) %{_datadir}/hplip/makecopies.py
-%attr(755,root,root) %{_datadir}/hplip/print.py
 %attr(755,root,root) %{_datadir}/hplip/probe.py
 %attr(755,root,root) %{_datadir}/hplip/scan.py
 %attr(755,root,root) %{_datadir}/hplip/sendfax.py
@@ -239,16 +239,18 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/timedate.py
 %attr(755,root,root) %{_datadir}/hplip/unload.py
 %{_datadir}/hplip/base
-# need look
-%{_datadir}/hplip/data
+%dir %{_datadir}/hplip/data
+%{_datadir}/hplip/data/ldl
+%{_datadir}/hplip/data/localization
+%{_datadir}/hplip/data/models
+%{_datadir}/hplip/data/pcl
+%{_datadir}/hplip/data/ps
 # fax subpackage ?
 %{_datadir}/hplip/fax
 %{_datadir}/hplip/installer
 %{_datadir}/hplip/pcard
-%{_datadir}/hplip/plugins
 %{_datadir}/hplip/prnt
 %{_datadir}/hplip/scan
-%{_datadir}/hplip/ui
 %attr(755,root,root) %{py_sitedir}/cupsext.so
 %attr(755,root,root) %{py_sitedir}/hpmudext.so
 %attr(755,root,root) %{py_sitedir}/pcardext.so
@@ -260,9 +262,14 @@ fi
 %files gui-tools
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/hp-fab
+%attr(755,root,root) %{_bindir}/hp-print
 %attr(755,root,root) %{_bindir}/hp-toolbox
 %attr(755,root,root) %{_datadir}/hplip/fab.py
+%attr(755,root,root) %{_datadir}/hplip/print.py
 %attr(755,root,root) %{_datadir}/hplip/toolbox.py
+%{_datadir}/hplip/plugins
+%{_datadir}/hplip/ui
+%{_datadir}/hplip/data/images
 
 %files libs
 %defattr(644,root,root,755)
