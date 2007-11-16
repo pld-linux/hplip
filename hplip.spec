@@ -28,8 +28,7 @@ License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 # Source0-md5:	eafb815ca4b4bb5a2f35a76ee3c2dc72
-Source1:	%{name}.init
-Source2:	%{name}-DJ670C.xml
+Source1:	%{name}-DJ670C.xml
 URL:		http://hplip.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -150,13 +149,13 @@ urządzenia HP AiO.
 sed -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 
 %build
-install %{SOURCE2} data/xml
+install %{SOURCE1} data/xml
 install /usr/share/automake/config.* .
 install /usr/share/automake/config.* prnt
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
 	--disable-foomatic-xml-install \
-	--enable-foomatic-install \
+	--enable-foomatic-ppd-install \
 	%{!?with_cups:--disable-cups-install}
 %{__make} \
 	hpppddir=/usr/share/cups/model \
