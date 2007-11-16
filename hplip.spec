@@ -21,7 +21,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	2.7.10
-Release:	0.1
+Release:	0.2
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -193,7 +193,7 @@ rm -f $RPM_BUILD_ROOT%{_cupsppddir}/foomatic-ppds
 
 for tool in align clean check colorcal fab firmware info levels makecopies makeuri print \
 		probe sendfax setup testpage timedate toolbox unload ; do
-	ln -sf %{_datadir}/%{name}/$tool $RPM_BUILD_ROOT%{_bindir}/hp-$tool
+	ln -sf %{_datadir}/%{name}/$tool.py $RPM_BUILD_ROOT%{_bindir}/hp-$tool
 done
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/hplip
