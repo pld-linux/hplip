@@ -13,6 +13,7 @@
 #		   /usr/lib/python2.5/site-packages/pcardext.la
 #		   /usr/lib/python2.5/site-packages/scanext.la
 #		   /usr/share/applications/hplip.desktop
+#	- it would be good to kill "python /usr/share/hplip/hpssd.py" during upgrade/uninstall
 #
 # Conditional build:
 %bcond_without	cups	# without CUPS support
@@ -21,7 +22,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	2.7.10
-Release:	0.2
+Release:	0.3
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -43,6 +44,7 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	sane-backends-devel
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	python-modules
+Obsoletes:	hplip-daemon
 Obsoletes:	hpijs
 Obsoletes:	python-hplip
 Conflicts:	ghostscript <= 7.00-3
@@ -63,18 +65,6 @@ provides a unified single and multi-function connectivity solution for
 Linux. The goal of this project is to provide "radically simple"
 printing, faxing, scanning, photo-card access, and device management
 to the consumer and small business desktop Linux users.
-
-%package daemon
-Summary:	HPLIP daemon
-Summary(pl.UTF-8):	Server HPLIP
-Group:		Applications/System
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-
-%description daemon
-HPLIP daemon.
-
-%description daemon -l pl.UTF-8
-Server HPLIP.
 
 %package gui-tools
 Summary:	HPLIP GUI tools
@@ -210,16 +200,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post daemon
-/sbin/chkconfig --add hplip
-%service hplip restart "HPLIP daemons"
-
-%preun daemon
-if [ "$1" = "0" ]; then
-	%service hplip stop
-	/sbin/chkconfig --del hplip
-fi
-
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
@@ -268,6 +248,7 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/clean.py
 %attr(755,root,root) %{_datadir}/hplip/colorcal.py
 %attr(755,root,root) %{_datadir}/hplip/firmware.py
+%attr(755,root,root) %{_datadir}/hplip/hpssd.py
 %attr(755,root,root) %{_datadir}/hplip/info.py
 %attr(755,root,root) %{_datadir}/hplip/levels.py
 %attr(755,root,root) %{_datadir}/hplip/makeuri.py
@@ -296,11 +277,6 @@ fi
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
 
-%files daemon
-%defattr(644,root,root,755)
-#%attr(755,root,root) %{_sbindir}/hp*
-%attr(754,root,root) /etc/rc.d/init.d/hplip
-%attr(755,root,root) %{_datadir}/hplip/hpssd.py
 
 %files gui-tools
 %defattr(644,root,root,755)
