@@ -164,7 +164,6 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/hp}
 
 %if %{with cups}
 install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
@@ -186,7 +185,6 @@ for tool in align clean check colorcal fab firmware info levels makecopies makeu
 	ln -sf %{_datadir}/%{name}/$tool.py $RPM_BUILD_ROOT%{_bindir}/hp-$tool
 done
 
-#mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/%{name}.conf,%{_sysconfdir}/hp}
 rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*} \
 	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},%{_sysconfdir}/sane.d/*} \
 	$RPM_BUILD_ROOT/etc/init.d
