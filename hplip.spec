@@ -2,16 +2,9 @@
 #	- add desktop file for toolbox
 #	- prepare fax packages for fax utilities
 #	- separate package for hpijs (hplip Req: hpijs, hplip-hpijs Prov: hpijs?)
-#	- installed but unpackaged
-#		   /usr/lib/python2.5/site-packages/cupsext.la
-#		   /usr/lib/python2.5/site-packages/hpmudext.la
-#		   /usr/lib/python2.5/site-packages/pcardext.la
-#		   /usr/lib/python2.5/site-packages/scanext.la
-#		   /usr/share/applications/hplip.desktop
+#	- separate udev files
 #	- it would be good to kill "python /usr/share/hplip/hpssd.py" during upgrade/uninstall
 #	- hpaio.desc removed in Fedora
-#
-# Conditional build:
 #
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
@@ -173,12 +166,13 @@ rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*
 	$RPM_BUILD_ROOT/etc/init.d
 rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{check.py,install.py,hplip-install}
 rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
+rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
 
 %post sane
 /bin/grep -q '^hpaio' /etc/sane.d/dll.conf || echo hpaio >> /etc/sane.d/dll.conf
@@ -254,7 +248,6 @@ fi
 %attr(755,root,root) %{py_sitedir}/scanext.so
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
-
 
 %files gui-tools
 %defattr(644,root,root,755)
