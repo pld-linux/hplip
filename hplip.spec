@@ -9,12 +9,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	2.7.10
-Release:	0.4
+Version:	2.8.6
+Release:	0.1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	eafb815ca4b4bb5a2f35a76ee3c2dc72
+# Source0-md5:	2571d7bf54d20a9b915288816e8cd895
 Patch0:		%{name}-ui-optional.patch
 URL:		http://hplip.sourceforge.net/
 BuildRequires:	autoconf
@@ -131,7 +131,7 @@ urządzenia HP AiO.
 
 %prep
 %setup -q
-%patch0 -p1
+#%patch0 -p1
 sed -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 
 %build
@@ -164,12 +164,12 @@ done
 rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*} \
 	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},%{_sysconfdir}/sane.d/*} \
 	$RPM_BUILD_ROOT/etc/init.d
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{check.py,install.py,hplip-install}
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{install.py,hplip-install}
 rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
 rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.la
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+# rm -rf $RPM_BUILD_ROOT
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
@@ -188,6 +188,7 @@ fi
 %{_sysconfdir}/udev/rules.d/*
 %attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
+%attr(755,root,root) %{_bindir}/hp-check
 %attr(755,root,root) %{_bindir}/hp-clean
 %attr(755,root,root) %{_bindir}/hp-colorcal
 %attr(755,root,root) %{_bindir}/hp-firmware
@@ -214,6 +215,7 @@ fi
 #%{_datadir}/hplip/*.png
 #%{_datadir}/hplip/*.html
 %attr(755,root,root) %{_datadir}/hplip/align.py
+%attr(755,root,root) %{_datadir}/hplip/check.py
 %attr(755,root,root) %{_datadir}/hplip/clean.py
 %attr(755,root,root) %{_datadir}/hplip/colorcal.py
 %attr(755,root,root) %{_datadir}/hplip/firmware.py
@@ -254,12 +256,15 @@ fi
 %attr(755,root,root) %{_bindir}/hp-fab
 %attr(755,root,root) %{_bindir}/hp-print
 %attr(755,root,root) %{_bindir}/hp-toolbox
+%attr(755,root,root) %{_bindir}/hp-systray
 %attr(755,root,root) %{_datadir}/hplip/fab.py
 %attr(755,root,root) %{_datadir}/hplip/print.py
 %attr(755,root,root) %{_datadir}/hplip/toolbox.py
+%attr(755,root,root) %{_datadir}/hplip/systray.py
 %{_datadir}/hplip/plugins
 %{_datadir}/hplip/ui
 %{_datadir}/hplip/data/images
+%{_desktopdir}/hplip.desktop
 
 %files libs
 %defattr(644,root,root,755)
@@ -278,6 +283,9 @@ fi
 %files -n cups-backend-hp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/hp
+%attr(755,root,root) %{_ulibdir}/cups/filter/foomatic-rip-hplip
+%attr(755,root,root) %{_ulibdir}/cups/filter/hplipjs
+
 
 %files -n cups-backend-hpfax
 %defattr(644,root,root,755)
