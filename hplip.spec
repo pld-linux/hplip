@@ -4,17 +4,16 @@
 #	- separate package for hpijs (hplip Req: hpijs, hplip-hpijs Prov: hpijs?)
 #	- separate udev files
 #	- it would be good to kill "python /usr/share/hplip/hpssd.py" during upgrade/uninstall
-#	- hpaio.desc removed in Fedora
 #
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	2.8.6
-Release:	2
+Version:	2.8.10
+Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	2571d7bf54d20a9b915288816e8cd895
+# Source0-md5:	a9ad78c4f0d884caac6b176b3cb9bf21
 Patch0:		%{name}-ui-optional.patch
 URL:		http://hplip.sourceforge.net/
 BuildRequires:	autoconf
@@ -142,13 +141,12 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 	--disable-foomatic-xml-install \
 	--enable-foomatic-ppd-install
 %{__make} \
-	hpppddir=/usr/share/cups/model \
 	hpppddir=%{_cupsppddir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT$(cups-config --datadir)/model \
+install -d $RPM_BUILD_ROOT%{_cupsppddir} \
 	$RPM_BUILD_ROOT$(cups-config --serverbin)/filter
 
 %{__make} install \
@@ -169,7 +167,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
 rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.la
 
 %clean
-# rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
@@ -185,6 +183,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc doc/*
+%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %{_sysconfdir}/udev/rules.d/*
 %attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
@@ -196,6 +195,8 @@ fi
 %attr(755,root,root) %{_bindir}/hp-levels
 %attr(755,root,root) %{_bindir}/hp-makecopies
 %attr(755,root,root) %{_bindir}/hp-makeuri
+%attr(755,root,root) %{_bindir}/hp-mkuri
+%attr(755,root,root) %{_bindir}/hp-plugin
 %attr(755,root,root) %{_bindir}/hp-probe
 %attr(755,root,root) %{_bindir}/hp-scan
 %attr(755,root,root) %{_bindir}/hp-sendfax
@@ -224,6 +225,7 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/levels.py
 %attr(755,root,root) %{_datadir}/hplip/makeuri.py
 %attr(755,root,root) %{_datadir}/hplip/makecopies.py
+%attr(755,root,root) %{_datadir}/hplip/plugin.py
 %attr(755,root,root) %{_datadir}/hplip/probe.py
 %attr(755,root,root) %{_datadir}/hplip/scan.py
 %attr(755,root,root) %{_datadir}/hplip/sendfax.py
@@ -274,7 +276,6 @@ fi
 %files sane
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/sane/libsane*.so.*
-%{_datadir}/hplip/hpaio.desc
 
 %files ppd
 %defattr(644,root,root,755)
@@ -285,7 +286,6 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/backend/hp
 %attr(755,root,root) %{_ulibdir}/cups/filter/foomatic-rip-hplip
 %attr(755,root,root) %{_ulibdir}/cups/filter/hplipjs
-
 
 %files -n cups-backend-hpfax
 %defattr(644,root,root,755)
