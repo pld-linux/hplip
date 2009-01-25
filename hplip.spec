@@ -9,7 +9,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	2.8.10
-Release:	1
+Release:	2
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -183,7 +183,6 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc doc/*
-%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %{_sysconfdir}/udev/rules.d/*
 %attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
@@ -255,6 +254,7 @@ fi
 
 %files gui-tools
 %defattr(644,root,root,755)
+%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %attr(755,root,root) %{_bindir}/hp-fab
 %attr(755,root,root) %{_bindir}/hp-print
 %attr(755,root,root) %{_bindir}/hp-toolbox
