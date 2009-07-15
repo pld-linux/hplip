@@ -1,0 +1,26 @@
+--- hplip-2.8.10/prnt/hpijs/registry.cpp~	2008-10-31 23:27:44.000000000 +0100
++++ hplip-2.8.10/prnt/hpijs/registry.cpp	2009-07-15 09:05:58.048526893 +0200
+@@ -285,10 +285,10 @@
+             device = eDJ3320;
+             match = TRUE;
+         }
+-		char	*cmdStr = strstr ((const char *) DevIDBuffer+2, "CMD:");
++		char	*cmdStr = (char *)strstr ((const char *) DevIDBuffer+2, "CMD:");
+ 		if (!cmdStr)
+ 		{
+-			cmdStr = strstr ((const char *) DevIDBuffer+2, "COMMAND SET:");
++			cmdStr = (char *)strstr ((const char *) DevIDBuffer+2, "COMMAND SET:");
+ 		}
+ 		if (!match && cmdStr && (strstr ((const char *) cmdStr+4, "POSTSCRIPT") || 
+ 			                     strstr ((const char *) cmdStr+4, "PostScript") || 
+--- hplip-2.8.10/prnt/hpijs/dj3320.cpp~	2008-10-31 23:27:44.000000000 +0100
++++ hplip-2.8.10/prnt/hpijs/dj3320.cpp	2009-07-15 09:07:37.832654493 +0200
+@@ -429,7 +429,7 @@
+             pLDLEncap->bNewStatus = FALSE;
+ 
+             // First 10 bytes of m_pbyReadBuff are packet header.  Status query from printer has $S:
+-            if ((pcStr = strstr((const char*)pLDLEncap->byStatusBuff + 10, "$S:")) == NULL)
++            if ((pcStr = (char *)strstr((const char*)pLDLEncap->byStatusBuff + 10, "$S:")) == NULL)
+             {
+                 m_dsCurrentStatus = DISPLAY_COMM_PROBLEM;
+                 return DISPLAY_COMM_PROBLEM;

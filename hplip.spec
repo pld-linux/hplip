@@ -9,12 +9,13 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	2.8.10
-Release:	3
+Release:	4
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 # Source0-md5:	a9ad78c4f0d884caac6b176b3cb9bf21
 Patch0:		%{name}-ui-optional.patch
+Patch1:		%{name}-build.patch
 URL:		http://hplip.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -131,6 +132,7 @@ urządzenia HP AiO.
 %prep
 %setup -q
 #%patch0 -p1
+%patch1 -p1
 sed -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 
 %build
