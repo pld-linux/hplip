@@ -5,7 +5,8 @@ Version:	3.9.8
 Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
-Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
+#Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}.tar.gz
 # Source0-md5:	ab2ee68be76ff50f381723e21b111d03
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
