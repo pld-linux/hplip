@@ -1,15 +1,13 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	2.8.10
-Release:	5
+Version:	3.9.8
+Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	a9ad78c4f0d884caac6b176b3cb9bf21
-Patch0:		%{name}-ui-optional.patch
-Patch1:		%{name}-build.patch
-URL:		http://hplip.sourceforge.net/
+# Source0-md5:	ab2ee68be76ff50f381723e21b111d03
+URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	cups-devel
@@ -48,7 +46,7 @@ to the consumer and small business desktop Linux users.
 Summary:	HPLIP GUI tools
 Summary(pl.UTF-8):	Narzędzia graficzne HPLIP
 Group:		Applications/System
-Requires:	python-PyQt
+Requires:	python-PyQt4
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description gui-tools
@@ -87,6 +85,7 @@ Summary:	PPD database for Hewlett Packard printers
 Summary(pl.UTF-8):	Baza danych PPD dla drukarek Hewlett Packard
 Group:		Applications/System
 Requires:	cups
+Requires:	cups-filter-foomatic
 Obsoletes:	hpijs-ppd
 
 %description ppd
@@ -122,10 +121,16 @@ This package allow CUPS faxing using HP AiO devices.
 Ten pakiet umożliwia wysyłanie faksów z poziomu CUPS-a poprzez
 urządzenia HP AiO.
 
+%package -n hal-hplip
+Summary:	HAL device information for HPLIP
+Group:		Applications/Printing
+Requires:       %{name} = %{version}-%{release}
+
+%description -n hal-hplip
+HAL device information for HPLIP supported devices
+
 %prep
 %setup -q
-#%patch0 -p1
-%patch1 -p1
 sed -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 
 %build
@@ -133,8 +138,9 @@ install /usr/share/automake/config.* .
 install /usr/share/automake/config.* prnt
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
-	--disable-foomatic-xml-install \
-	--enable-foomatic-ppd-install
+	--enable-foomatic-ppd-install \
+	--enable-foomatic-rip-hplip-install \
+	--disable-foomatic-drv-install 
 %{__make} \
 	hpppddir=%{_cupsppddir}
 
@@ -179,7 +185,6 @@ fi
 %defattr(644,root,root,755)
 %doc doc/*
 %{_sysconfdir}/udev/rules.d/*
-%attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
 %attr(755,root,root) %{_bindir}/hp-check
 %attr(755,root,root) %{_bindir}/hp-clean
@@ -190,8 +195,10 @@ fi
 %attr(755,root,root) %{_bindir}/hp-makecopies
 %attr(755,root,root) %{_bindir}/hp-makeuri
 %attr(755,root,root) %{_bindir}/hp-mkuri
+%attr(755,root,root) %{_bindir}/hp-pkservice
 %attr(755,root,root) %{_bindir}/hp-plugin
 %attr(755,root,root) %{_bindir}/hp-probe
+%attr(755,root,root) %{_bindir}/hp-query
 %attr(755,root,root) %{_bindir}/hp-scan
 %attr(755,root,root) %{_bindir}/hp-sendfax
 %attr(755,root,root) %{_bindir}/hp-setup
@@ -207,20 +214,21 @@ fi
 %{_datadir}/hplip/__init__.py
 %dir %{_datadir}/hplip/copier
 %{_datadir}/hplip/copier/*.py
-#%{_datadir}/hplip/*.png
-#%{_datadir}/hplip/*.html
 %attr(755,root,root) %{_datadir}/hplip/align.py
 %attr(755,root,root) %{_datadir}/hplip/check.py
 %attr(755,root,root) %{_datadir}/hplip/clean.py
 %attr(755,root,root) %{_datadir}/hplip/colorcal.py
 %attr(755,root,root) %{_datadir}/hplip/firmware.py
+%attr(755,root,root) %{_datadir}/hplip/hpdio.py
 %attr(755,root,root) %{_datadir}/hplip/hpssd.py
 %attr(755,root,root) %{_datadir}/hplip/info.py
 %attr(755,root,root) %{_datadir}/hplip/levels.py
-%attr(755,root,root) %{_datadir}/hplip/makeuri.py
 %attr(755,root,root) %{_datadir}/hplip/makecopies.py
+%attr(755,root,root) %{_datadir}/hplip/makeuri.py
+%attr(755,root,root) %{_datadir}/hplip/pkservice.py
 %attr(755,root,root) %{_datadir}/hplip/plugin.py
 %attr(755,root,root) %{_datadir}/hplip/probe.py
+%attr(755,root,root) %{_datadir}/hplip/query.py
 %attr(755,root,root) %{_datadir}/hplip/scan.py
 %attr(755,root,root) %{_datadir}/hplip/sendfax.py
 %attr(755,root,root) %{_datadir}/hplip/setup.py
@@ -250,16 +258,28 @@ fi
 %files gui-tools
 %defattr(644,root,root,755)
 %{_sysconfdir}/xdg/autostart/hplip-systray.desktop
+%attr(755,root,root) %{_bindir}/hp-devicesettings
 %attr(755,root,root) %{_bindir}/hp-fab
+%attr(755,root,root) %{_bindir}/hp-faxsetup
+%attr(755,root,root) %{_bindir}/hp-linefeedcal
+%attr(755,root,root) %{_bindir}/hp-pqdiag
 %attr(755,root,root) %{_bindir}/hp-print
-%attr(755,root,root) %{_bindir}/hp-toolbox
+%attr(755,root,root) %{_bindir}/hp-printsettings
 %attr(755,root,root) %{_bindir}/hp-systray
+%attr(755,root,root) %{_bindir}/hp-toolbox
+%attr(755,root,root) %{_bindir}/hp-wificonfig
+%attr(755,root,root) %{_datadir}/hplip/devicesettings.py
+%attr(755,root,root) %{_datadir}/hplip/wificonfig.py
 %attr(755,root,root) %{_datadir}/hplip/fab.py
+%attr(755,root,root) %{_datadir}/hplip/faxsetup.py
+%attr(755,root,root) %{_datadir}/hplip/linefeedcal.py
+%attr(755,root,root) %{_datadir}/hplip/pqdiag.py
 %attr(755,root,root) %{_datadir}/hplip/print.py
-%attr(755,root,root) %{_datadir}/hplip/toolbox.py
+%attr(755,root,root) %{_datadir}/hplip/printsettings.py
 %attr(755,root,root) %{_datadir}/hplip/systray.py
-%{_datadir}/hplip/plugins
-%{_datadir}/hplip/ui
+%attr(755,root,root) %{_datadir}/hplip/toolbox.py
+#%{_datadir}/hplip/plugins
+%{_datadir}/hplip/ui4
 %{_datadir}/hplip/data/images
 %{_desktopdir}/hplip.desktop
 
@@ -280,8 +300,15 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/hp
 %attr(755,root,root) %{_ulibdir}/cups/filter/foomatic-rip-hplip
+%attr(755,root,root) %{_ulibdir}/cups/filter/hpcups
 %attr(755,root,root) %{_ulibdir}/cups/filter/hplipjs
+%attr(755,root,root) %{_ulibdir}/cups/filter/hpcac
 
 %files -n cups-backend-hpfax
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/hpfax
+%attr(755,root,root) %{_ulibdir}/cups/filter/hpcupsfax
+
+%files -n hal-hplip
+%defattr(644,root,root,755)
+%{_datadir}/hal/fdi/preprobe/10osvendor/20-hplip-devices.fdi
