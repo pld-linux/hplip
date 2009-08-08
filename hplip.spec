@@ -1,15 +1,8 @@
-# TODO:
-#	- add desktop file for toolbox
-#	- prepare fax packages for fax utilities
-#	- separate package for hpijs (hplip Req: hpijs, hplip-hpijs Prov: hpijs?)
-#	- separate udev files
-#	- it would be good to kill "python /usr/share/hplip/hpssd.py" during upgrade/uninstall
-#
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	2.8.10
-Release:	4
+Release:	5
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz

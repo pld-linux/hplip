@@ -1,0 +1,6 @@
+# TODO:
+- add desktop file for toolbox
+- prepare fax packages for fax utilities
+- separate package for hpijs (hplip Req: hpijs, hplip-hpijs Prov: hpijs?)
+- separate udev files
+- it would be good to kill "python /usr/share/hplip/hpssd.py" during upgrade/uninstall
