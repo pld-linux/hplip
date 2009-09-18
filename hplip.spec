@@ -295,6 +295,7 @@ fi
 %files ppd
 %defattr(644,root,root,755)
 %{_cupsppddir}/*
+%{_datadir}/cups/drv/hp
 
 %files -n cups-backend-hp
 %defattr(644,root,root,755)
