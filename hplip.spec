@@ -11,13 +11,16 @@ URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	cups-devel
+BuildRequires:	dbus-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libusb-devel
+BuildRequires:	libusb-compat-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
 BuildRequires:	python-modules
+BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sane-backends-devel
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
