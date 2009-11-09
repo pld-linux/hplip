@@ -2,7 +2,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	3.9.8
-Release:	1
+Release:	2
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -143,7 +143,8 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
 	--enable-foomatic-ppd-install \
 	--enable-foomatic-rip-hplip-install \
-	--disable-foomatic-drv-install 
+	--disable-foomatic-drv-install \
+	--enable-hpijs-install
 %{__make} \
 	hpppddir=%{_cupsppddir}
 
@@ -188,6 +189,7 @@ fi
 %defattr(644,root,root,755)
 %doc doc/*
 %{_sysconfdir}/udev/rules.d/*
+%attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
 %attr(755,root,root) %{_bindir}/hp-check
 %attr(755,root,root) %{_bindir}/hp-clean
