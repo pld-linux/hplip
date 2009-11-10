@@ -1,12 +1,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	3.9.8
-Release:	2
+Version:	3.9.10
+Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	ab2ee68be76ff50f381723e21b111d03
+# Source0-md5:	b8d6a9e7a1b63d7c0f7174df3ae3d15f
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -141,10 +141,14 @@ install /usr/share/automake/config.* .
 install /usr/share/automake/config.* prnt
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
+	--enable-hpcups-install \
+	--enable-cups-drv-install \
+	--enable-cups-ppd-install \
+	--enable-hpijs-install \
 	--enable-foomatic-ppd-install \
+	--enable-foomatic-drv-install  \
 	--enable-foomatic-rip-hplip-install \
-	--disable-foomatic-drv-install \
-	--enable-hpijs-install
+	--enable-pp-build
 %{__make} \
 	hpppddir=%{_cupsppddir}
 
@@ -170,6 +174,7 @@ rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*
 rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{install.py,hplip-install}
 rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
 rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.la
+rm $RPM_BUILD_ROOT%{_libdir}/libhp{ip,mud}.so
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -287,6 +292,8 @@ fi
 %{_datadir}/hplip/ui4
 %{_datadir}/hplip/data/images
 %{_desktopdir}/hplip.desktop
+%dir %{_sharedstatedir}/hp
+%verify(not md5 mtime size) %{_sharedstatedir}/hp/hplip.state
 
 %files libs
 %defattr(644,root,root,755)
@@ -296,6 +303,7 @@ fi
 %files sane
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/sane/libsane*.so.*
+%attr(755,root,root) %{_libdir}/sane/libsane*.so
 
 %files ppd
 %defattr(644,root,root,755)
@@ -309,6 +317,7 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/filter/hpcups
 %attr(755,root,root) %{_ulibdir}/cups/filter/hplipjs
 %attr(755,root,root) %{_ulibdir}/cups/filter/hpcac
+%{_cupsdir}/drv/hp
 
 %files -n cups-backend-hpfax
 %defattr(644,root,root,755)
