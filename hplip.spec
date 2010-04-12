@@ -2,7 +2,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	3.10.2
-Release:	2
+Release:	3
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -149,7 +149,9 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 	--enable-foomatic-ppd-install \
 	--enable-foomatic-drv-install  \
 	--enable-foomatic-rip-hplip-install \
-	--enable-pp-build
+	--enable-policykit \
+	--enable-pp-build \
+	--enable-udev-acl-rules
 %{__make} \
 	hpppddir=%{_cupsppddir}
 
@@ -216,6 +218,7 @@ fi
 %attr(755,root,root) %{_bindir}/hp-testpage
 %attr(755,root,root) %{_bindir}/hp-timedate
 %attr(755,root,root) %{_bindir}/hp-unload
+%{_datadir}/dbus-1/system-services/com.hp.hplip.service
 %dir %{_datadir}/hplip
 # info about GPL v2 for some files
 #%{_datadir}/hplip/COPYING
@@ -259,10 +262,12 @@ fi
 %{_datadir}/hplip/pcard
 %{_datadir}/hplip/prnt
 %{_datadir}/hplip/scan
+%{_datadir}/polkit-1/actions/com.hp.hplip.policy
 %attr(755,root,root) %{py_sitedir}/cupsext.so
 %attr(755,root,root) %{py_sitedir}/hpmudext.so
 %attr(755,root,root) %{py_sitedir}/pcardext.so
 %attr(755,root,root) %{py_sitedir}/scanext.so
+%{_sysconfdir}/dbus-1/system.d/com.hp.hplip.conf
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
 
@@ -320,8 +325,6 @@ fi
 %attr(755,root,root) %{_ulibdir}/cups/filter/hpcac
 %attr(755,root,root) %{_ulibdir}/cups/filter/pstotiff
 %{_cupsdir}/drv/hp
-%{_cupsdir}/mime/pstotiff.convs
-%{_cupsdir}/mime/pstotiff.types
 
 %files -n cups-backend-hpfax
 %defattr(644,root,root,755)
