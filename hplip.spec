@@ -2,7 +2,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
 Version:	3.10.2
-Release:	1
+Release:	2
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -16,6 +16,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libusb-devel
 BuildRequires:	libusb-compat-devel
+BuildRequires:	libtiff-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
