@@ -1,0 +1,20 @@
+--- hplip-3.10.2/hplip.desktop.in~	2010-02-25 00:07:55.000000000 +0100
++++ hplip-3.10.2/hplip.desktop.in	2010-05-12 12:57:08.175491500 +0200
+@@ -7,6 +7,6 @@
+ Exec=hp-toolbox
+ Icon=@abs_datadir@/hplip/data/images/128x128/hp_logo.png
+ Terminal=false
+-Categories=Application;Utility;
++Categories=Settings;HardwareSettings;Printing;
+ X-KDE-StartupNotify=false
+ StartupNotify=false
+--- hplip-3.10.2/hplip-systray.desktop.in~	2010-02-25 00:07:55.000000000 +0100
++++ hplip-3.10.2/hplip-systray.desktop.in	2010-05-12 12:57:27.908662640 +0200
+@@ -7,6 +7,6 @@
+ Exec=hp-systray
+ Icon=@abs_datadir@/hplip/data/images/128x128/hp_logo.png
+ Terminal=false
+-Categories=Application;Utility;
++Categories=Settings;HardwareSettings;Printing;
+ X-KDE-StartupNotify=false
+ StartupNotify=false
