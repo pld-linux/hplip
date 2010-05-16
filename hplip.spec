@@ -15,20 +15,22 @@ BuildRequires:	cups-devel
 BuildRequires:	dbus-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
-BuildRequires:	libusb-devel
-BuildRequires:	libusb-compat-devel
 BuildRequires:	libtiff-devel
+BuildRequires:	libtool
+BuildRequires:	libusb-compat-devel
+BuildRequires:	libusb-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	python-modules
-BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sane-backends-devel
+BuildRequires:	sed >= 4.0
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	python-modules
-Obsoletes:	hplip-daemon
 Obsoletes:	hpijs
+Obsoletes:	hplip-daemon
 Obsoletes:	python-hplip
 Conflicts:	ghostscript <= 7.00-3
 # used in scan.py
@@ -51,8 +53,8 @@ to the consumer and small business desktop Linux users.
 Summary:	HPLIP GUI tools
 Summary(pl.UTF-8):	Narzędzia graficzne HPLIP
 Group:		Applications/System
-Requires:	python-PyQt4
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	python-PyQt4
 
 %description gui-tools
 HPLIP GUI tools.
@@ -129,7 +131,7 @@ urządzenia HP AiO.
 %package -n hal-hplip
 Summary:	HAL device information for HPLIP
 Group:		Applications/Printing
-Requires:       %{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 
 %description -n hal-hplip
 HAL device information for HPLIP supported devices
@@ -137,7 +139,8 @@ HAL device information for HPLIP supported devices
 %prep
 %setup -q
 %patch0 -p1
-sed -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
+%{__sed} -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
+%{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure
 
 %build
 install /usr/share/automake/config.* .
@@ -269,7 +272,7 @@ fi
 %attr(755,root,root) %{py_sitedir}/hpmudext.so
 %attr(755,root,root) %{py_sitedir}/pcardext.so
 %attr(755,root,root) %{py_sitedir}/scanext.so
-%{_sysconfdir}/dbus-1/system.d/com.hp.hplip.conf
+/etc/dbus-1/system.d/com.hp.hplip.conf
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
 
