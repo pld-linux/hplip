@@ -1,12 +1,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing Project
 Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
 Name:		hplip
-Version:	3.10.5
-Release:	3
+Version:	3.10.6
+Release:	1
 License:	BSD, GPL v2 and MIT
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	a4a3679d5987520226ef70d834b63b88
+# Source0-md5:	96c36e3baf35e93cf9436a772f0c9ef4
 Patch0:		%{name}-desktop.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
@@ -273,6 +273,8 @@ fi
 %attr(755,root,root) %{py_sitedir}/pcardext.so
 %attr(755,root,root) %{py_sitedir}/scanext.so
 /etc/dbus-1/system.d/com.hp.hplip.conf
+/etc/cups/pstotiff.convs
+/etc/cups/pstotiff.types
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
 
@@ -335,6 +337,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_ulibdir}/cups/backend/hpfax
 %attr(755,root,root) %{_ulibdir}/cups/filter/hpcupsfax
+
 
 %files -n hal-hplip
 %defattr(644,root,root,755)
