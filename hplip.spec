@@ -8,6 +8,7 @@ Group:		Applications/System
 Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 # Source0-md5:	609718830a26874fc0ea84a47b8132f3
 Patch0:		%{name}-desktop.patch
+Patch1:		unresolved.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -139,12 +140,16 @@ HAL device information for HPLIP supported devices
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 %{__sed} -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
-%{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure
 
 %build
-install /usr/share/automake/config.* .
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__automake}
 install /usr/share/automake/config.* prnt
+%{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
 	--enable-hpcups-install \
