@@ -161,9 +161,10 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 	--enable-foomatic-rip-hplip-install \
 	--enable-policykit \
 	--enable-pp-build \
-	--enable-udev-acl-rules
-%{__make} \
-	hpppddir=%{_cupsppddir}
+	--enable-udev-acl-rules \
+	--with-mimedir=%{_datadir}/cups/mime \
+	--with-hpppddir=%{_cupsppddir}
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -173,8 +174,7 @@ install -d $RPM_BUILD_ROOT%{_cupsppddir} \
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	rpm_install=yes \
-	hpppddir=%{_cupsppddir}
+	rpm_install=yes
 
 for tool in align clean colorcal fab firmware info levels makecopies makeuri print \
 		probe scan sendfax setup testpage timedate toolbox unload ; do
