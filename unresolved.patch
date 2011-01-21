@@ -11,7 +11,7 @@
  
 --- hplip-3.10.9/Makefile.am.wiget	2010-11-07 18:02:32.254945320 +0100
 +++ hplip-3.10.9/Makefile.am	2010-11-07 18:03:03.497071268 +0100
-@@ -56,7 +56,7 @@ else
+@@ -56,7 +56,7 @@
  libsane_hpaio_la_LDFLAGS = -version-info 1:0:0
  endif
  # The following is a interlibrary dependency that must be compiled first.
@@ -20,3 +20,4 @@
  #libsane_hpaio_la_CFLAGS = -DWITH_NONAMESPACES -DSOAP_DEBUG
  libsane_hpaio_la_CFLAGS = $(DBUS_CFLAGS)
  endif # SCAN_BUILD
+
