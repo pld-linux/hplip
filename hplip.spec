@@ -117,7 +117,7 @@ Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach HP.
 
 %package -n cups-backend-hpfax
 Summary:	HP fax backend for CUPS
-Summary(pl):	Backend HP fax dla CUPS-a
+Summary(pl.UTF-8):	Backend HP fax dla CUPS-a
 Group:		Applications/Printing
 Requires:	%{name} = %{version}-%{release}
 Requires:	cups
