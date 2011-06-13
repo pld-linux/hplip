@@ -1,11 +1,11 @@
-Summary:	Hewlett-Packard Linux Imaging and Printing Project
-Summary(pl.UTF-8):	Serwer dla drukarek HP Inkjet
+Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
+Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
 Version:	3.11.5
 Release:	1
-License:	BSD, GPL v2 and MIT
+License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
-Source0:	http://dl.sourceforge.net/hplip/%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 # Source0-md5:	0a3d0f46ec89857b4c0feea6923864f1
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
@@ -13,22 +13,21 @@ URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	cups-devel
-BuildRequires:	dbus-devel
+BuildRequires:	dbus-devel >= 1.0.0
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool
-BuildRequires:	libusb-compat-devel
-BuildRequires:	libusb-devel
+BuildRequires:	libusb-compat-devel >= 0.1
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel
-BuildRequires:	python-modules
+BuildRequires:	python-devel >= 2.2
+BuildRequires:	python-modules >= 2.2
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sane-backends-devel
 BuildRequires:	sed >= 4.0
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 Requires:	python-modules
 Obsoletes:	hpijs
 Obsoletes:	hplip-daemon
@@ -40,8 +39,12 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _ulibdir        %{_prefix}/lib
 
-%define 	_cupsdir 	%(cups-config --datadir)
-%define		_cupsppddir	%{_cupsdir}/model
+%define 	cups_datadir 	%(cups-config --datadir)
+%define		cups_mimedir	%{cups_datadir}/mime
+%define		cups_ppddir	%{cups_datadir}/model
+%define		cups_serverdir	%(cups-config --serverbin)
+%define		cups_backenddir	%{cups_serverdir}/backend
+%define		cups_filterdir	%{cups_serverdir}/filter
 
 %description
 The Hewlett-Packard Linux Imaging and Printing project (HPLIP)
@@ -50,18 +53,25 @@ Linux. The goal of this project is to provide "radically simple"
 printing, faxing, scanning, photo-card access, and device management
 to the consumer and small business desktop Linux users.
 
+%description -l pl.UTF-8
+Projekt Hewlett-Packard Linux Imaging and Printing (HPLIP) udostępnia
+jednolite, wielofunkcyjne rozwiązanie dla Linuksa. Celem tego projektu
+jest zapewnienie "radykalnie prostego" drukowania, faksowania,
+skanowania, dostępu do kart fotograficznych oraz zarządzania
+urządzeniami końcowym użytkownikom Linuksa.
+
 %package gui-tools
 Summary:	HPLIP GUI tools
-Summary(pl.UTF-8):	Narzędzia graficzne HPLIP
+Summary(pl.UTF-8):	Narzędzia HPLIP z graficznym interfejsem użytkownika
 Group:		Applications/System
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	python-PyQt4
 
 %description gui-tools
 HPLIP GUI tools.
 
 %description gui-tools -l pl.UTF-8
-Narzędzia graficzne HPLIP.
+Narzędzia HPLIP z graficznym interfejsem użytkownika.
 
 %package libs
 Summary:	HPLIP Libraries
@@ -75,18 +85,18 @@ HPLIP Libraries.
 Biblioteki HPLIP.
 
 %package sane
-Summary:	HPLIP SANE Libraries
-Summary(pl.UTF-8):	Biblioteki HPLIP SANE
+Summary:	HPLIP driver for SANE (scanner access)
+Summary(pl.UTF-8):	Sterownik HPLIP dla SANE (dostęp do skanera)
 Group:		Libraries
 Requires(post):	/bin/grep
 Requires(postun):	/bin/sed
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 
 %description sane
-HPLIP SANE Libraries.
+HPLIP driver for SANE (provides scanner access).
 
 %description sane -l pl.UTF-8
-Biblioteki HPLIP SANE.
+Sterownik HPLIP dla SANE (umożliwia dostęp do skanera).
 
 %package ppd
 Summary:	PPD database for Hewlett Packard printers
@@ -110,7 +120,7 @@ Requires:	%{name} = %{version}-%{release}
 Requires:	cups
 
 %description -n cups-backend-hp
-This package allow CUPS printing on HP printers.
+This package allows CUPS printing on HP printers.
 
 %description -n cups-backend-hp -l pl.UTF-8
 Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach HP.
@@ -130,65 +140,64 @@ Ten pakiet umożliwia wysyłanie faksów z poziomu CUPS-a poprzez
 urządzenia HP AiO.
 
 %package -n hal-hplip
-Summary:	HAL device information for HPLIP
+Summary:	HAL device information for HPLIP supported devices
+Summary(pl.UTF-8):	Informacje o urządzeniach HAL dla urządzeń obsługiwanych przez HPLIP
 Group:		Applications/Printing
 Requires:	%{name} = %{version}-%{release}
 
 %description -n hal-hplip
 HAL device information for HPLIP supported devices
 
+%description -n hal-hplip -l pl.UTF-8
+Informacje o urządzeniach HAL dla urządzeń obsługiwanych przez HPLIP.
+
 %prep
 %setup -q
 %undos Makefile.am
 %patch0 -p1
 %patch1 -p1
+
 %{__sed} -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
+%{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure.in
 
 %build
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__automake}
-install /usr/share/automake/config.* prnt
-%{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
-	--enable-hpcups-install \
 	--enable-cups-drv-install \
 	--enable-cups-ppd-install \
-	--enable-hpijs-install \
-	--enable-foomatic-ppd-install \
 	--enable-foomatic-drv-install  \
+	--enable-foomatic-ppd-install \
 	--enable-foomatic-rip-hplip-install \
+	--enable-hpcups-install \
+	--enable-hpijs-install \
 	--enable-policykit \
 	--enable-pp-build \
 	--enable-udev-acl-rules \
-	--with-mimedir=%{_datadir}/cups/mime \
-	--with-hpppddir=%{_cupsppddir}
+	--with-cupsbackenddir=%{cups_backenddir} \
+	--with-cupsfilterdir=%{cups_filterdir} \
+	--with-hpppddir=%{cups_ppddir} \
+	--with-mimedir=%{_datadir}/cups/mime
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_cupsppddir} \
-	$RPM_BUILD_ROOT$(cups-config --serverbin)/filter
-
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	rpm_install=yes
+	DESTDIR=$RPM_BUILD_ROOT
 
 for tool in align clean colorcal fab firmware info levels makecopies makeuri print \
 		probe scan sendfax setup testpage timedate toolbox unload ; do
 	ln -sf %{_datadir}/%{name}/$tool.py $RPM_BUILD_ROOT%{_bindir}/hp-$tool
 done
 
-rm -rf $RPM_BUILD_ROOT{%{_bindir}/foomatic-rip,%{_libdir}/*.la,%{_docdir}/hpijs*} \
-	$RPM_BUILD_ROOT{%{_datadir}/%{name}/hplip{,.sh},%{_sysconfdir}/sane.d/*} \
-	$RPM_BUILD_ROOT/etc/init.d
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/{install.py,hplip-install}
-rm -f $RPM_BUILD_ROOT%{_libdir}/sane/*.la
-rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.la
-rm $RPM_BUILD_ROOT%{_libdir}/libhp{ip,mud}.so
+# useless (nothing is going to link to installed libraries/modules)
+%{__rm} $RPM_BUILD_ROOT{%{_libdir}/*.{so,la},%{_libdir}/sane/*.{so,la},%{py_sitedir}/*.la}
+# handled by post script
+%{__rm} $RPM_BUILD_ROOT/etc/sane.d/dll.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -207,7 +216,6 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc doc/*
-%{_sysconfdir}/udev/rules.d/*
 %attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
 %attr(755,root,root) %{_bindir}/hp-check
@@ -229,13 +237,7 @@ fi
 %attr(755,root,root) %{_bindir}/hp-testpage
 %attr(755,root,root) %{_bindir}/hp-timedate
 %attr(755,root,root) %{_bindir}/hp-unload
-%{_datadir}/dbus-1/system-services/com.hp.hplip.service
 %dir %{_datadir}/hplip
-# info about GPL v2 for some files
-#%{_datadir}/hplip/COPYING
-# initscript for hplip helpers
-#%{_datadir}/hplip/hplip
-#%{_datadir}/hplip/hplip.sh
 %{_datadir}/hplip/__init__.py
 %dir %{_datadir}/hplip/copier
 %{_datadir}/hplip/copier/*.py
@@ -273,20 +275,20 @@ fi
 %{_datadir}/hplip/pcard
 %{_datadir}/hplip/prnt
 %{_datadir}/hplip/scan
-%{_datadir}/polkit-1/actions/com.hp.hplip.policy
 %attr(755,root,root) %{py_sitedir}/cupsext.so
 %attr(755,root,root) %{py_sitedir}/hpmudext.so
 %attr(755,root,root) %{py_sitedir}/pcardext.so
 %attr(755,root,root) %{py_sitedir}/scanext.so
-/etc/dbus-1/system.d/com.hp.hplip.conf
-%{_datadir}/cups/mime/pstotiff.types
-%{_datadir}/cups/mime/pstotiff.convs
 %dir %{_sysconfdir}/hp
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/*
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/hplip.conf
+/etc/udev/rules.d/40-hplip.rules
+/etc/udev/rules.d/56-hpmud_support.rules
+/etc/dbus-1/system.d/com.hp.hplip.conf
+%{_datadir}/dbus-1/system-services/com.hp.hplip.service
+%{_datadir}/polkit-1/actions/com.hp.hplip.policy
 
 %files gui-tools
 %defattr(644,root,root,755)
-%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %attr(755,root,root) %{_bindir}/hp-devicesettings
 %attr(755,root,root) %{_bindir}/hp-fab
 %attr(755,root,root) %{_bindir}/hp-faxsetup
@@ -310,41 +312,47 @@ fi
 #%{_datadir}/hplip/plugins
 %{_datadir}/hplip/ui4
 %{_datadir}/hplip/data/images
+%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %{_desktopdir}/hplip.desktop
-%dir %{_sharedstatedir}/hp
-%verify(not md5 mtime size) %{_sharedstatedir}/hp/hplip.state
+%dir /var/lib/hp
+%verify(not md5 mtime size) /var/lib/hp/hplip.state
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libhpip*.so.*
-%attr(755,root,root) %{_libdir}/libhpmud*.so.*
+%attr(755,root,root) %{_libdir}/libhpip.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libhpip.so.0
+%attr(755,root,root) %{_libdir}/libhpmud.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libhpmud.so.0
 
 %files sane
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/sane/libsane*.so.*
-%attr(755,root,root) %{_libdir}/sane/libsane*.so
+%doc scan/sane/hpaio.desc
+%attr(755,root,root) %{_libdir}/sane/libsane-hpaio.so.*.*.*
+%attr(755,root,root) %{_libdir}/sane/libsane-hpaio.so.1
 
 %files ppd
 %defattr(644,root,root,755)
-%{_cupsppddir}/*
-%{_datadir}/cups/drv/hp
+%{cups_ppddir}/HP-Fax*.ppd.gz
+%{cups_ppddir}/apollo-*.ppd.gz
+%{cups_ppddir}/hp-*.ppd.gz
 
 %files -n cups-backend-hp
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_ulibdir}/cups/backend/hp
-%attr(755,root,root) %{_ulibdir}/cups/filter/foomatic-rip-hplip
-%attr(755,root,root) %{_ulibdir}/cups/filter/hpcups
-%attr(755,root,root) %{_ulibdir}/cups/filter/hplipjs
-%attr(755,root,root) %{_ulibdir}/cups/filter/hpcac
-%attr(755,root,root) %{_ulibdir}/cups/filter/hpps
-%attr(755,root,root) %{_ulibdir}/cups/filter/pstotiff
-%{_cupsdir}/drv/hp
+%attr(755,root,root) %{cups_backenddir}/hp
+%attr(755,root,root) %{cups_filterdir}/foomatic-rip-hplip
+%attr(755,root,root) %{cups_filterdir}/hpcups
+%attr(755,root,root) %{cups_filterdir}/hplipjs
+%attr(755,root,root) %{cups_filterdir}/hpcac
+%attr(755,root,root) %{cups_filterdir}/hpps
+%{cups_datadir}/drv/hp
 
 %files -n cups-backend-hpfax
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_ulibdir}/cups/backend/hpfax
-%attr(755,root,root) %{_ulibdir}/cups/filter/hpcupsfax
-
+%attr(755,root,root) %{cups_backenddir}/hpfax
+%attr(755,root,root) %{cups_filterdir}/hpcupsfax
+%attr(755,root,root) %{cups_filterdir}/pstotiff
+%{cups_mimedir}/pstotiff.types
+%{cups_mimedir}/pstotiff.convs
 
 %files -n hal-hplip
 %defattr(644,root,root,755)
