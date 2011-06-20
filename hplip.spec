@@ -1,3 +1,12 @@
+#
+# Conditional build:
+%bcond_without	dbus	# build dbus
+%bcond_without	fax		# build fax, depends on dbus
+
+%if %{without dbus}
+%undefine	with_fax
+%endif
+
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
@@ -13,7 +22,7 @@ URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	cups-devel
-BuildRequires:	dbus-devel >= 1.0.0
+%{?with_dbus:BuildRequires:	dbus-devel >= 1.0.0}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
@@ -39,10 +48,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _ulibdir        %{_prefix}/lib
 
-%define 	cups_datadir 	%(cups-config --datadir)
+%define 	cups_datadir 	%(cups-config --datadir 2>/dev/null || echo ERROR)
 %define		cups_mimedir	%{cups_datadir}/mime
-%define		cups_ppddir	%{cups_datadir}/model
-%define		cups_serverdir	%(cups-config --serverbin)
+%define		cups_ppddir		%{cups_datadir}/model
+%define		cups_serverdir	%(cups-config --serverbin 2>/dev/null || echo ERROR)
 %define		cups_backenddir	%{cups_serverdir}/backend
 %define		cups_filterdir	%{cups_serverdir}/filter
 
@@ -167,6 +176,8 @@ Informacje o urządzeniach HAL dla urządzeń obsługiwanych przez HPLIP.
 %{__automake}
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
+	%{!?with_dbus:--disable-dbus-build} \
+	%{!?with_fax:--disable-fax-build} \
 	--enable-cups-drv-install \
 	--enable-cups-ppd-install \
 	--enable-foomatic-drv-install  \
@@ -198,6 +209,10 @@ done
 %{__rm} $RPM_BUILD_ROOT{%{_libdir}/*.{so,la},%{_libdir}/sane/*.{so,la},%{py_sitedir}/*.la}
 # handled by post script
 %{__rm} $RPM_BUILD_ROOT/etc/sane.d/dll.conf
+
+%if %{without fax}
+rm $RPM_BUILD_ROOT%{cups_filterdir}/pstotiff
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -270,7 +285,9 @@ fi
 %{_datadir}/hplip/data/pcl
 %{_datadir}/hplip/data/ps
 # fax subpackage ?
+%if %{with fax}
 %{_datadir}/hplip/fax
+%endif
 %{_datadir}/hplip/installer
 %{_datadir}/hplip/pcard
 %{_datadir}/hplip/prnt
@@ -332,7 +349,9 @@ fi
 
 %files ppd
 %defattr(644,root,root,755)
+%if %{with fax}
 %{cups_ppddir}/HP-Fax*.ppd.gz
+%endif
 %{cups_ppddir}/apollo-*.ppd.gz
 %{cups_ppddir}/hp-*.ppd.gz
 
@@ -346,6 +365,7 @@ fi
 %attr(755,root,root) %{cups_filterdir}/hpps
 %{cups_datadir}/drv/hp
 
+%if %{with fax}
 %files -n cups-backend-hpfax
 %defattr(644,root,root,755)
 %attr(755,root,root) %{cups_backenddir}/hpfax
@@ -353,6 +373,7 @@ fi
 %attr(755,root,root) %{cups_filterdir}/pstotiff
 %{cups_mimedir}/pstotiff.types
 %{cups_mimedir}/pstotiff.convs
+%endif
 
 %files -n hal-hplip
 %defattr(644,root,root,755)
