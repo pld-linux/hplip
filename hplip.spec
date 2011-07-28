@@ -11,7 +11,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scannin
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
 Version:	3.11.5
-Release:	1
+Release:	2
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -38,6 +38,7 @@ BuildRequires:	sane-backends-devel
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	python-modules
+Obsoletes:	hal-hplip
 Obsoletes:	hpijs
 Obsoletes:	hplip-daemon
 Obsoletes:	python-hplip
@@ -148,18 +149,6 @@ This package allow CUPS faxing using HP AiO devices.
 Ten pakiet umożliwia wysyłanie faksów z poziomu CUPS-a poprzez
 urządzenia HP AiO.
 
-%package -n hal-hplip
-Summary:	HAL device information for HPLIP supported devices
-Summary(pl.UTF-8):	Informacje o urządzeniach HAL dla urządzeń obsługiwanych przez HPLIP
-Group:		Applications/Printing
-Requires:	%{name} = %{version}-%{release}
-
-%description -n hal-hplip
-HAL device information for HPLIP supported devices
-
-%description -n hal-hplip -l pl.UTF-8
-Informacje o urządzeniach HAL dla urządzeń obsługiwanych przez HPLIP.
-
 %prep
 %setup -q
 %undos Makefile.am
@@ -213,6 +202,9 @@ done
 %if %{without fax}
 rm $RPM_BUILD_ROOT%{cups_filterdir}/pstotiff
 %endif
+
+# use udev, hal's dead
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/hal
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -374,7 +366,3 @@ fi
 %{cups_mimedir}/pstotiff.types
 %{cups_mimedir}/pstotiff.convs
 %endif
-
-%files -n hal-hplip
-%defattr(644,root,root,755)
-%{_datadir}/hal/fdi/preprobe/10osvendor/20-hplip-devices.fdi
