@@ -1,0 +1,143 @@
+--- hplip-3.11.7/installer/distros.dat~	2011-07-24 22:06:50.000000000 +0300
++++ hplip-3.11.7/installer/distros.dat	2011-10-06 23:01:42.727409095 +0300
+@@ -91,7 +91,7 @@
+ # ****************************************
+ 
+ [distros]
+-distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs
++distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,pld
+ 
+ # ****************************************
+ 
+@@ -8468,3 +8468,131 @@
+ 
+ [lfs:6:python-notify]
+ packages=python-notify
++
++# ****************************************
++[pld]
++index=60
++versions=3
++display_name=PLD Linux
++alt_names=
++display=1
++notes=
++package_mgrs=rpm,poldek,yum,smart,PackageKit
++package_mgr_cmd=poldek -u $packages_to_install
++pre_depend_cmd=
++post_depend_cmd=
++hplip_remove_cmd=poldek -e hplip
++su_sudo=sudo
++ppd_install=ppd
++udev_mode_fix=1
++ppd_dir=/usr/share/cups/model
++fix_ppd_symlink=0
++drv_dir=/usr/lib/cups/driver
++
++[pld:3]
++code_name=Th
++supported=0
++scan_supported=1
++fax_supported=1
++pcard_supported=1
++network_supported=1
++parallel_supported=1
++usb_supported=1
++packaged_version=
++release_date=
++notes=
++ppd_install=ppd
++udev_mode_fix=1
++ppd_dir=/usr/share/cups/model
++fix_ppd_symlink=0
++drv_dir=/usr/share/cups/drv/HP
++ui_toolkit=qt4
++foomatic_rip_hplip=1
++
++[pld:3:cups]
++packages=cups,cups-client
++
++[pld:3:cups-devel]
++packages=cups-devel
++
++[pld:3:gcc]
++packages=gcc,gcc-c++
++
++[pld:3:gs]
++packages=ghostscript
++
++[pld:3:libcrypto]
++packages=openssl-devel
++
++[pld:3:libjpeg]
++packages=libjpeg-devel
++
++[pld:3:libnetsnmp-devel]
++packages=net-snmp-devel
++
++[pld:3:libpthread]
++packages=glibc-headers
++
++[pld:3:libtool]
++packages=libtool
++
++[pld:3:libusb]
++packages=libusb-devel
++
++[pld:3:make]
++packages=make
++
++[pld:3:pil]
++packages=python-PIL
++
++[pld:3:ppdev]
++packages=
++commands=sudo /sbin/modprobe ppdev
++
++[pld:3:pyqt]
++packages=python-PyQt
++
++[pld:3:python-devel]
++packages=python-devel
++
++[pld:3:pyqt4]
++packages=python-PyQt4
++
++[pld:3:pyqt4-dbus]
++packages=python-dbus
++
++[pld:3:python23]
++packages=python
++
++[pld:3:python2x]
++packages=python
++
++[pld:3:reportlab]
++packages=python-ReportLab
++
++[pld:3:sane]
++packages=sane-backends
++
++[pld:3:sane-devel]
++packages=sane-backends-devel
++
++[pld:3:scanimage]
++packages=sane-frontends
++
++[pld:3:xsane]
++packages=xsane
++
++[pld:3:python-dbus]
++packages=python-dbus,python-pygobject
++
++[pld:3:dbus]
++packages=dbus-devel
++
++[pld:3:cups-image]
++packages=cups-devel
++
++[pld:3:python-notify]
++packages=python-notify
++
++[pld:3:policykit]
++packages=polkit,polkit-gnome

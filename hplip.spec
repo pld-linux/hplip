@@ -19,6 +19,7 @@ Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		%{name}-cups15.patch
+Patch3:		pld-distro.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -156,6 +157,7 @@ urządzenia HP AiO.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %{__sed} -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 %{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure.in
