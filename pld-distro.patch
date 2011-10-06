@@ -50,7 +50,7 @@
 +udev_mode_fix=1
 +ppd_dir=/usr/share/cups/model
 +fix_ppd_symlink=0
-+drv_dir=/usr/share/cups/drv/HP
++drv_dir=/usr/lib/cups/driver
 +ui_toolkit=qt4
 +foomatic_rip_hplip=1
 +
