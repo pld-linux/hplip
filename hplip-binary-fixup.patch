@@ -18,7 +18,7 @@
  
 -
 +def binaryPatch(f):
-+    try
++    try:
 +        # file, md5sum, replace content at address with specified byte
 +        patches = { 'lj-x86_32.so' : { 'md5': '30bdf8c844508a53d80362f9eba670c5',
 +                                       # https://bugs.launchpad.net/hplip/+bug/666780
