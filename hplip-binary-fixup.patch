@@ -1,6 +1,19 @@
---- hplip-3.11.10/base/pkit.py~	2011-10-02 05:06:15.000000000 +0200
-+++ hplip-3.11.10/base/pkit.py	2011-11-30 19:07:51.344925378 +0100
-@@ -318,7 +318,28 @@
+diff -urN hplip-3.11.10.org/base/pkit.py hplip-3.11.10/base/pkit.py
+--- hplip-3.11.10.org/base/pkit.py	2011-10-02 05:06:15.000000000 +0200
++++ hplip-3.11.10/base/pkit.py	2011-11-30 19:12:09.944970086 +0100
+@@ -30,6 +30,11 @@
+ import shutil
+ import stat
+ 
++try:
++    from hashlib import md5 as md5
++except ImportError:
++    from md5 import md5
++
+ # Local
+ from base.logger import *
+ from base.g import *
+@@ -318,7 +323,28 @@
              log.debug("shutdown: %s" % str(e))
              return False
  
@@ -14,7 +27,7 @@
 +                } }
 +        if f in patches:
 +            d = open(f, 'rb').read()
-+            m = hashlib.md5()
++            m = md5()
 +            m.update(d)
 +            m.digest()
 +            if patches[f]['md5'] == m.hexdigest():
@@ -30,7 +43,7 @@
  
  def copyPluginFiles(src_dir):
      os.chdir(src_dir)
-@@ -411,6 +432,11 @@
+@@ -411,6 +437,11 @@
              continue
  
          else:
