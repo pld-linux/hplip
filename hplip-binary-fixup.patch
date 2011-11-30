@@ -1,0 +1,44 @@
+--- hplip-3.11.10/base/pkit.py~	2011-10-02 05:06:15.000000000 +0200
++++ hplip-3.11.10/base/pkit.py	2011-11-30 19:07:51.344925378 +0100
+@@ -318,7 +318,28 @@
+             log.debug("shutdown: %s" % str(e))
+             return False
+ 
+-
++def binaryPatch(f):
++    try
++        # file, md5sum, replace content at address with specified byte
++        patches = { 'lj-x86_32.so' : { 'md5': '30bdf8c844508a53d80362f9eba670c5',
++                                       # https://bugs.launchpad.net/hplip/+bug/666780
++                                       'replace' : [ (0xA068, 0x10) ]
++                } }
++        if f in patches:
++            d = open(f, 'rb').read()
++            m = hashlib.md5()
++            m.update(d)
++            m.digest()
++            if patches[f]['md5'] == m.hexdigest():
++                file = open(f, 'rb+')
++                for (addr, val) in patches[f]['replace']:
++                    file.seek(addr)
++                    file.write(chr(val))
++                file.close()
++    except Exception, e:
++        log.debug("binaryPatch: %s" % str(e))
++        return False
++    return True
+ 
+ def copyPluginFiles(src_dir):
+     os.chdir(src_dir)
+@@ -411,6 +432,11 @@
+             continue
+ 
+         else:
++            
++            if not binaryPatch(trg):
++                log.error("Target file %s could not be binary patched to fixup bugs." % trg)
++                continue
++
+             if not os.path.exists(trg):
+                 log.error("Target file %s does not exist. File copy failed." % trg)
+                 continue

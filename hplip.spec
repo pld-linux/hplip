@@ -11,7 +11,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scannin
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
 Version:	3.11.10
-Release:	1
+Release:	1.2
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -19,6 +19,7 @@ Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
+Patch3:		%{name}-binary-fixup.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -156,6 +157,7 @@ urządzenia HP AiO.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %{__sed} -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 %{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure.in
