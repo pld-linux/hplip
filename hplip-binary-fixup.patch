@@ -1,6 +1,5 @@
-diff -urN hplip-3.11.10.org/base/pkit.py hplip-3.11.10/base/pkit.py
---- hplip-3.11.10.org/base/pkit.py	2011-10-02 05:06:15.000000000 +0200
-+++ hplip-3.11.10/base/pkit.py	2011-11-30 19:12:09.944970086 +0100
+--- hplip-3.11.10/base/pkit.py.org	2011-11-30 20:01:59.640469386 +0100
++++ hplip-3.11.10/base/pkit.py	2011-11-30 20:06:43.216664960 +0100
 @@ -30,6 +30,11 @@
  import shutil
  import stat
@@ -13,7 +12,7 @@ diff -urN hplip-3.11.10.org/base/pkit.py hplip-3.11.10/base/pkit.py
  # Local
  from base.logger import *
  from base.g import *
-@@ -318,7 +323,28 @@
+@@ -318,7 +323,31 @@
              log.debug("shutdown: %s" % str(e))
              return False
  
@@ -23,8 +22,11 @@ diff -urN hplip-3.11.10.org/base/pkit.py hplip-3.11.10/base/pkit.py
 +        # file, md5sum, replace content at address with specified byte
 +        patches = { 'lj-x86_32.so' : { 'md5': '30bdf8c844508a53d80362f9eba670c5',
 +                                       # https://bugs.launchpad.net/hplip/+bug/666780
-+                                       'replace' : [ (0xA068, 0x10) ]
-+                } }
++                                       'replace' : [ (0xA068, 0x10) ] },
++                    'lj-x86_64.so' : { 'md5': '28e1b2cde011cbbcd4b5c85c1866c893',
++                                       # https://bugs.launchpad.net/hplip/+bug/666780
++                                       'replace' : [ (0xD0D0, 0x10) ] }
++                  }
 +        if f in patches:
 +            d = open(f, 'rb').read()
 +            m = md5()
@@ -43,7 +45,7 @@ diff -urN hplip-3.11.10.org/base/pkit.py hplip-3.11.10/base/pkit.py
  
  def copyPluginFiles(src_dir):
      os.chdir(src_dir)
-@@ -411,6 +437,11 @@
+@@ -411,6 +440,11 @@
              continue
  
          else:
