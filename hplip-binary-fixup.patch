@@ -51,7 +51,7 @@
  
          else:
 +            
-+            binaryPatch(trg):
++            binaryPatch(trg)
 +
              if not os.path.exists(trg):
                  log.error("Target file %s does not exist. File copy failed." % trg)
