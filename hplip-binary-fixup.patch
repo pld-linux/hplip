@@ -12,7 +12,7 @@
  # Local
  from base.logger import *
  from base.g import *
-@@ -318,7 +323,31 @@
+@@ -318,7 +323,32 @@
              log.debug("shutdown: %s" % str(e))
              return False
  
@@ -27,32 +27,31 @@
 +                                       # https://bugs.launchpad.net/hplip/+bug/666780
 +                                       'replace' : [ (0xD0D0, 0x10) ] }
 +                  }
-+        if f in patches:
++        fs = os.path.basename(f)
++        if fs in patches:
 +            d = open(f, 'rb').read()
 +            m = md5()
 +            m.update(d)
 +            m.digest()
-+            if patches[f]['md5'] == m.hexdigest():
++            if patches[fs]['md5'] == m.hexdigest():
 +                file = open(f, 'rb+')
-+                for (addr, val) in patches[f]['replace']:
++                for (addr, val) in patches[fs]['replace']:
 +                    file.seek(addr)
 +                    file.write(chr(val))
 +                file.close()
 +    except Exception, e:
-+        log.debug("binaryPatch: %s" % str(e))
++        log.error("Could not patch binary `%s' for known issues." % str(e))
 +        return False
 +    return True
  
  def copyPluginFiles(src_dir):
      os.chdir(src_dir)
-@@ -411,6 +440,11 @@
+@@ -411,6 +441,9 @@
              continue
  
          else:
 +            
-+            if not binaryPatch(trg):
-+                log.error("Target file %s could not be binary patched to fixup bugs." % trg)
-+                continue
++            binaryPatch(trg):
 +
              if not os.path.exists(trg):
                  log.error("Target file %s does not exist. File copy failed." % trg)
