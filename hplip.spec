@@ -10,16 +10,17 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
-Version:	3.11.10
-Release:	2
+Version:	3.12.2
+Release:	1
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	6143f30f3b6905ef22105176a3b80db0
+# Source0-md5:	6572ec99c1818cc92d97b793bff08633
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
 Patch3:		%{name}-binary-fixup.patch
+Patch4:		%{name}-build.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -158,6 +159,7 @@ urządzenia HP AiO.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %{__sed} -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 %{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure.in
@@ -230,8 +232,10 @@ fi
 %attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
 %attr(755,root,root) %{_bindir}/hp-check
+%attr(755,root,root) %{_bindir}/hp-check-plugin
 %attr(755,root,root) %{_bindir}/hp-clean
 %attr(755,root,root) %{_bindir}/hp-colorcal
+%attr(755,root,root) %{_bindir}/hp-diagnose_plugin
 %attr(755,root,root) %{_bindir}/hp-firmware
 %attr(755,root,root) %{_bindir}/hp-info
 %attr(755,root,root) %{_bindir}/hp-levels
@@ -254,8 +258,10 @@ fi
 %{_datadir}/hplip/copier/*.py
 %attr(755,root,root) %{_datadir}/hplip/align.py
 %attr(755,root,root) %{_datadir}/hplip/check.py
+%attr(755,root,root) %{_datadir}/hplip/check-plugin.py
 %attr(755,root,root) %{_datadir}/hplip/clean.py
 %attr(755,root,root) %{_datadir}/hplip/colorcal.py
+%attr(755,root,root) %{_datadir}/hplip/diagnose_plugin.py
 %attr(755,root,root) %{_datadir}/hplip/firmware.py
 %attr(755,root,root) %{_datadir}/hplip/hpdio.py
 %attr(755,root,root) %{_datadir}/hplip/hpssd.py
@@ -296,6 +302,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/hplip.conf
 /etc/udev/rules.d/40-hplip.rules
 /etc/udev/rules.d/56-hpmud_support.rules
+/etc/udev/rules.d/86-hpmud_plugin.rules
 /etc/dbus-1/system.d/com.hp.hplip.conf
 %{_datadir}/dbus-1/system-services/com.hp.hplip.service
 %{_datadir}/polkit-1/actions/com.hp.hplip.policy
@@ -322,7 +329,6 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/printsettings.py
 %attr(755,root,root) %{_datadir}/hplip/systray.py
 %attr(755,root,root) %{_datadir}/hplip/toolbox.py
-#%{_datadir}/hplip/plugins
 %{_datadir}/hplip/ui4
 %{_datadir}/hplip/data/images
 %{_sysconfdir}/xdg/autostart/hplip-systray.desktop
