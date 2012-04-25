@@ -10,17 +10,18 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
-Version:	3.12.2
+Version:	3.12.4
 Release:	1
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	6572ec99c1818cc92d97b793bff08633
+# Source0-md5:	a063f76aa47edab55a3f31ff2558df07
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
 Patch3:		%{name}-binary-fixup.patch
 Patch4:		%{name}-build.patch
+Patch5:		%{name}-udev-rules.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -160,6 +161,7 @@ urządzenia HP AiO.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %{__sed} -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
 %{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure.in
@@ -300,9 +302,9 @@ fi
 %attr(755,root,root) %{py_sitedir}/scanext.so
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/hplip.conf
-/etc/udev/rules.d/40-hplip.rules
-/etc/udev/rules.d/56-hpmud_support.rules
-/etc/udev/rules.d/86-hpmud_plugin.rules
+/lib/udev/rules.d/40-hplip.rules
+/lib/udev/rules.d/56-hpmud_support.rules
+/lib/udev/rules.d/86-hpmud_plugin.rules
 /etc/dbus-1/system.d/com.hp.hplip.conf
 %{_datadir}/dbus-1/system-services/com.hp.hplip.service
 %{_datadir}/polkit-1/actions/com.hp.hplip.policy
