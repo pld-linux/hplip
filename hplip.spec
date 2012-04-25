@@ -193,9 +193,12 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/var/lib/hp
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+touch $RPM_BUILD_ROOT/var/lib/hp/hplip.state
 
 for tool in align clean colorcal fab firmware info levels makecopies makeuri print \
 		probe scan sendfax setup testpage timedate toolbox unload ; do
@@ -237,7 +240,9 @@ fi
 %attr(755,root,root) %{_bindir}/hp-check-plugin
 %attr(755,root,root) %{_bindir}/hp-clean
 %attr(755,root,root) %{_bindir}/hp-colorcal
+%attr(755,root,root) %{_bindir}/hp-config_usb_printer
 %attr(755,root,root) %{_bindir}/hp-diagnose_plugin
+%attr(755,root,root) %{_bindir}/hp-diagnose_queues
 %attr(755,root,root) %{_bindir}/hp-firmware
 %attr(755,root,root) %{_bindir}/hp-info
 %attr(755,root,root) %{_bindir}/hp-levels
@@ -263,7 +268,9 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/check-plugin.py
 %attr(755,root,root) %{_datadir}/hplip/clean.py
 %attr(755,root,root) %{_datadir}/hplip/colorcal.py
+%attr(755,root,root) %{_datadir}/hplip/config_usb_printer.py
 %attr(755,root,root) %{_datadir}/hplip/diagnose_plugin.py
+%attr(755,root,root) %{_datadir}/hplip/diagnose_queues.py
 %attr(755,root,root) %{_datadir}/hplip/firmware.py
 %attr(755,root,root) %{_datadir}/hplip/hpdio.py
 %attr(755,root,root) %{_datadir}/hplip/hpssd.py
@@ -303,6 +310,7 @@ fi
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/hplip.conf
 /lib/udev/rules.d/40-hplip.rules
+/lib/udev/rules.d/56-hpmud_add_printer.rules
 /lib/udev/rules.d/56-hpmud_support.rules
 /lib/udev/rules.d/86-hpmud_plugin.rules
 /etc/dbus-1/system.d/com.hp.hplip.conf
