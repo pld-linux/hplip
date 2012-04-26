@@ -1,7 +1,10 @@
+# TODO:
+# - add desktop file for toolbox
+# - separate hpijs package?
 #
 # Conditional build:
 %bcond_without	dbus	# build dbus
-%bcond_without	fax		# build fax, depends on dbus
+%bcond_without	fax	# build fax, depends on dbus
 
 %if %{without dbus}
 %undefine	with_fax
