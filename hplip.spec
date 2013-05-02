@@ -22,6 +22,9 @@ Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
+# note: this patch adds support to fixing only certain binary plugins. Newer plugin
+# version have differend md5 sums, different offsets, so handling new binaries need
+# to be added
 Patch3:		%{name}-binary-fixup.patch
 Patch4:		%{name}-build.patch
 Patch5:		%{name}-udev-rules.patch
