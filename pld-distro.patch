@@ -11,8 +11,8 @@
  
 @@ -8468,3 +8468,131 @@
  
- [lfs:6:python-notify]
- packages=python-notify
+ [lfs:6:avahi-utils]
+ packages=avahi
 +
 +# ****************************************
 +[pld]

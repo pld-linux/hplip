@@ -13,12 +13,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
-Version:	3.12.4
+Version:	3.13.11
 Release:	1
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	a063f76aa47edab55a3f31ff2558df07
+# Source0-md5:	8ee362d9bc45fd4eddd3c9d9e583d728
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
@@ -26,7 +26,6 @@ Patch2:		pld-distro.patch
 # version have differend md5 sums, different offsets, so handling new binaries need
 # to be added
 Patch3:		%{name}-binary-fixup.patch
-Patch4:		%{name}-build.patch
 Patch5:		%{name}-udev-rules.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
@@ -59,9 +58,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _ulibdir        %{_prefix}/lib
 
-%define 	cups_datadir 	%(cups-config --datadir 2>/dev/null || echo ERROR)
+%define		cups_datadir	%(cups-config --datadir 2>/dev/null || echo ERROR)
 %define		cups_mimedir	%{cups_datadir}/mime
-%define		cups_ppddir		%{cups_datadir}/model
+%define		cups_ppddir	%{cups_datadir}/model
 %define		cups_serverdir	%(cups-config --serverbin 2>/dev/null || echo ERROR)
 %define		cups_backenddir	%{cups_serverdir}/backend
 %define		cups_filterdir	%{cups_serverdir}/filter
@@ -138,6 +137,7 @@ Summary(pl.UTF-8):	Backend HP dla CUPS-a
 Group:		Applications/Printing
 Requires:	%{name} = %{version}-%{release}
 Requires:	cups
+Requires:	cups-filter-foomatic
 
 %description -n cups-backend-hp
 This package allows CUPS printing on HP printers.
@@ -165,8 +165,7 @@ urządzenia HP AiO.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
+#%patch3 -p1
 %patch5 -p1
 
 %{__sed} -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
@@ -185,7 +184,7 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 	--enable-cups-ppd-install \
 	--enable-foomatic-drv-install  \
 	--enable-foomatic-ppd-install \
-	--enable-foomatic-rip-hplip-install \
+	--disable-foomatic-rip-hplip-install \
 	--enable-hpcups-install \
 	--enable-hpijs-install \
 	--enable-policykit \
@@ -211,10 +210,17 @@ for tool in align clean colorcal fab firmware info levels makecopies makeuri pri
 	ln -sf %{_datadir}/%{name}/$tool.py $RPM_BUILD_ROOT%{_bindir}/hp-$tool
 done
 
+# use filter from foomatic package, the perl script from hplip does not work correctly
+# with cups 1.7.x, and is an unnecessary functional duplicate
+ln -s %{_bindir}/foomatic-rip $RPM_BUILD_ROOT%{cups_filterdir}/foomatic-rip-hplip
+
 # useless (nothing is going to link to installed libraries/modules)
 %{__rm} $RPM_BUILD_ROOT{%{_libdir}/*.{so,la},%{_libdir}/sane/*.{so,la},%{py_sitedir}/*.la}
 # handled by post script
 %{__rm} $RPM_BUILD_ROOT/etc/sane.d/dll.conf
+# junk
+%{__rm} $RPM_BUILD_ROOT{%{_bindir}/hp-{uninstall,upgrade},%{_datadir}/hplip/{uninstall,upgrade}.py}
+%{__rm} $RPM_BUILD_ROOT/usr/%{systemdunitdir}/hplip-printer@.service
 
 %if %{without fax}
 rm $RPM_BUILD_ROOT%{cups_filterdir}/pstotiff
@@ -222,6 +228,8 @@ rm $RPM_BUILD_ROOT%{cups_filterdir}/pstotiff
 
 # use udev, hal's dead
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/hal
+
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -243,18 +251,18 @@ fi
 %attr(755,root,root) %{_bindir}/hpijs
 %attr(755,root,root) %{_bindir}/hp-align
 %attr(755,root,root) %{_bindir}/hp-check
-%attr(755,root,root) %{_bindir}/hp-check-plugin
 %attr(755,root,root) %{_bindir}/hp-clean
 %attr(755,root,root) %{_bindir}/hp-colorcal
 %attr(755,root,root) %{_bindir}/hp-config_usb_printer
 %attr(755,root,root) %{_bindir}/hp-diagnose_plugin
 %attr(755,root,root) %{_bindir}/hp-diagnose_queues
 %attr(755,root,root) %{_bindir}/hp-firmware
+%attr(755,root,root) %{_bindir}/hp-doctor
 %attr(755,root,root) %{_bindir}/hp-info
 %attr(755,root,root) %{_bindir}/hp-levels
+%attr(755,root,root) %{_bindir}/hp-logcapture
 %attr(755,root,root) %{_bindir}/hp-makecopies
 %attr(755,root,root) %{_bindir}/hp-makeuri
-%attr(755,root,root) %{_bindir}/hp-mkuri
 %attr(755,root,root) %{_bindir}/hp-pkservice
 %attr(755,root,root) %{_bindir}/hp-plugin
 %attr(755,root,root) %{_bindir}/hp-probe
@@ -277,11 +285,14 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/config_usb_printer.py
 %attr(755,root,root) %{_datadir}/hplip/diagnose_plugin.py
 %attr(755,root,root) %{_datadir}/hplip/diagnose_queues.py
+%attr(755,root,root) %{_datadir}/hplip/doctor.py
 %attr(755,root,root) %{_datadir}/hplip/firmware.py
 %attr(755,root,root) %{_datadir}/hplip/hpdio.py
+%attr(755,root,root) %{_datadir}/hplip/hplip_clean.sh
 %attr(755,root,root) %{_datadir}/hplip/hpssd.py
 %attr(755,root,root) %{_datadir}/hplip/info.py
 %attr(755,root,root) %{_datadir}/hplip/levels.py
+%attr(755,root,root) %{_datadir}/hplip/logcapture.py
 %attr(755,root,root) %{_datadir}/hplip/makecopies.py
 %attr(755,root,root) %{_datadir}/hplip/makeuri.py
 %attr(755,root,root) %{_datadir}/hplip/pkservice.py
@@ -315,10 +326,7 @@ fi
 %attr(755,root,root) %{py_sitedir}/scanext.so
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/hplip.conf
-/lib/udev/rules.d/40-hplip.rules
-/lib/udev/rules.d/56-hpmud_add_printer.rules
-/lib/udev/rules.d/56-hpmud_support.rules
-/lib/udev/rules.d/86-hpmud_plugin.rules
+/lib/udev/rules.d/56-hpmud.rules
 /etc/dbus-1/system.d/com.hp.hplip.conf
 %{_datadir}/dbus-1/system-services/com.hp.hplip.service
 %{_datadir}/polkit-1/actions/com.hp.hplip.policy
@@ -378,8 +386,6 @@ fi
 %attr(755,root,root) %{cups_backenddir}/hp
 %attr(755,root,root) %{cups_filterdir}/foomatic-rip-hplip
 %attr(755,root,root) %{cups_filterdir}/hpcups
-%attr(755,root,root) %{cups_filterdir}/hplipjs
-%attr(755,root,root) %{cups_filterdir}/hpcac
 %attr(755,root,root) %{cups_filterdir}/hpps
 %{cups_datadir}/drv/hp
 
