@@ -36,7 +36,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool
-BuildRequires:	libusb-compat-devel >= 0.1
+BuildRequires:	libusb-devel >= 1.0
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
