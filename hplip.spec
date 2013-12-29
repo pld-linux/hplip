@@ -14,7 +14,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scannin
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
 Version:	3.13.11
-Release:	1
+Release:	2
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -122,7 +122,7 @@ Summary:	PPD database for Hewlett Packard printers
 Summary(pl.UTF-8):	Baza danych PPD dla drukarek Hewlett Packard
 Group:		Applications/System
 Requires:	cups
-Requires:	cups-filter-foomatic
+Requires:	cups-filters >= 1.0.43
 Obsoletes:	hpijs-ppd
 
 %description ppd
@@ -137,7 +137,7 @@ Summary(pl.UTF-8):	Backend HP dla CUPS-a
 Group:		Applications/Printing
 Requires:	%{name} = %{version}-%{release}
 Requires:	cups
-Requires:	cups-filter-foomatic
+Requires:	cups-filters >= 1.0.43
 
 %description -n cups-backend-hp
 This package allows CUPS printing on HP printers.
@@ -210,9 +210,9 @@ for tool in align clean colorcal fab firmware info levels makecopies makeuri pri
 	ln -sf %{_datadir}/%{name}/$tool.py $RPM_BUILD_ROOT%{_bindir}/hp-$tool
 done
 
-# use filter from foomatic package, the perl script from hplip does not work correctly
-# with cups 1.7.x, and is an unnecessary functional duplicate
-ln -s %{_bindir}/foomatic-rip $RPM_BUILD_ROOT%{cups_filterdir}/foomatic-rip-hplip
+# use filter from cups-filters package, the perl script from hplip does not work
+# correctly with cups 1.7.x, and is an unnecessary functional duplicate
+ln -s %{cups_filterdir}/foomatic-rip $RPM_BUILD_ROOT%{cups_filterdir}/foomatic-rip-hplip
 
 # useless (nothing is going to link to installed libraries/modules)
 %{__rm} $RPM_BUILD_ROOT{%{_libdir}/*.{so,la},%{_libdir}/sane/*.{so,la},%{py_sitedir}/*.la}
