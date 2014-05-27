@@ -13,12 +13,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
-Version:	3.13.11
-Release:	2
+Version:	3.14.4
+Release:	1
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	8ee362d9bc45fd4eddd3c9d9e583d728
+# Source0-md5:	6e8d53fb2284271505d2e1706c01f6c5
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
@@ -30,7 +30,7 @@ Patch5:		%{name}-udev-rules.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	cups-devel
+BuildRequires:	cups-devel >= 1.2
 %{?with_dbus:BuildRequires:	dbus-devel >= 1.0.0}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
@@ -189,7 +189,6 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 	--enable-hpijs-install \
 	--enable-policykit \
 	--enable-pp-build \
-	--enable-udev-acl-rules \
 	--with-cupsbackenddir=%{cups_backenddir} \
 	--with-cupsfilterdir=%{cups_filterdir} \
 	--with-hpppddir=%{cups_ppddir} \
