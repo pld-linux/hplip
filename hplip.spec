@@ -13,12 +13,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
-Version:	3.14.4
+Version:	3.16.2
 Release:	1
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	6e8d53fb2284271505d2e1706c01f6c5
+# Source0-md5:	e024f3b52b3b5be66da843fba7da4cf5
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
@@ -168,7 +168,9 @@ urządzenia HP AiO.
 #%patch3 -p1
 %patch5 -p1
 
-%{__sed} -i -e's,^#!/usr/bin/env python$,#!/usr/bin/python,' *.py
+%{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python},' *.py fax/filters/pstotiff prnt/filters/hpps
+find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
+	%{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python},'
 %{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure.in
 
 %build
@@ -219,10 +221,10 @@ ln -s %{cups_filterdir}/foomatic-rip $RPM_BUILD_ROOT%{cups_filterdir}/foomatic-r
 %{__rm} $RPM_BUILD_ROOT/etc/sane.d/dll.conf
 # junk
 %{__rm} $RPM_BUILD_ROOT{%{_bindir}/hp-{uninstall,upgrade},%{_datadir}/hplip/{uninstall,upgrade}.py}
-%{__rm} $RPM_BUILD_ROOT/usr/%{systemdunitdir}/hplip-printer@.service
+%{__rm} $RPM_BUILD_ROOT/usr/lib/systemd/system/hplip-printer@.service
 
 %if %{without fax}
-rm $RPM_BUILD_ROOT%{cups_filterdir}/pstotiff
+%{__rm} $RPM_BUILD_ROOT%{cups_filterdir}/pstotiff
 %endif
 
 # use udev, hal's dead
@@ -361,8 +363,12 @@ fi
 
 %files libs
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libhpdiscovery.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libhpdiscovery.so.0
 %attr(755,root,root) %{_libdir}/libhpip.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libhpip.so.0
+%attr(755,root,root) %{_libdir}/libhpipp.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libhpipp.so.0
 %attr(755,root,root) %{_libdir}/libhpmud.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libhpmud.so.0
 

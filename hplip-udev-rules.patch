@@ -1,14 +1,13 @@
---- hplip-3.14.4/data/rules/56-hpmud.rules.orig	2014-05-27 15:39:55.510795837 +0200
-+++ hplip-3.14.4/data/rules/56-hpmud.rules	2014-05-27 15:42:45.834125604 +0200
-@@ -11,8 +11,6 @@ LABEL="hpmud_usb_rules"
- ATTR{idVendor}=="03f0", ATTR{idProduct}=="????", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes", ENV{hp_test}="yes", ENV{ID_HPLIP}="1"
+--- hplip-3.16.2/data/rules/56-hpmud.rules.orig	2016-02-22 17:40:19.056836902 +0100
++++ hplip-3.16.2/data/rules/56-hpmud.rules	2016-02-22 17:41:52.463499649 +0100
+@@ -12,7 +12,4 @@
+ # ENV{ID_HPLIP}="1" is for Ubuntu udev-acl
+ ATTR{idVendor}=="03f0", ENV{ID_USB_INTERFACES}=="*:0701??:*|*:08????:", OWNER="root", GROUP="lp", MODE="0664", ENV{libsane_matched}="yes", ENV{hp_test}="yes", ENV{ID_HPLIP}="1"
  
- 
--# This rule will add the printer and install plugin
--ENV{hp_test}=="yes", PROGRAM="/bin/sh -c 'logger -p user.info loading HP Device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c 'if [ -f /usr/bin/systemctl ]; then /usr/bin/systemctl --no-block start hplip-printer@$env{BUSNUM}:$env{DEVNUM}.service; else /usr/bin/nohup /usr/bin/python /usr/bin/hp-config_usb_printer $env{BUSNUM}:$env{DEVNUM} ; fi &'"
- 
- # If sane-bankends is installed add hpaio backend support to dll.conf if needed.
- ENV{sane_hpaio}=="yes", RUN+="/bin/sh -c 'grep -q ^#hpaio /etc/sane.d/dll.conf;if [ $$? -eq 0 ];then sed -i -e s/^#hpaio/hpaio/ /etc/sane.d/dll.conf;else grep -q ^hpaio /etc/sane.d/dll.conf;if [ $$? -ne 0 ];then echo hpaio >>/etc/sane.d/dll.conf;fi;fi'"
+-# This rule will check the smart install feature, plugin status and firmware download for the required printers.
+-ENV{hp_test}=="yes", PROGRAM="/bin/sh -c 'logger -p user.info loading HP Device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c '/usr/bin/nohup /usr/bin/hp-config_usb_printer $env{BUSNUM}:$env{DEVNUM}'"
+-
+ LABEL="hpmud_rules_end"
 diff -up hplip-3.13.6/Makefile.am.udev-rules hplip-3.13.6/Makefile.am
 --- hplip-3.13.6/Makefile.am.udev-rules	2013-06-24 10:28:19.868301356 +0200
 +++ hplip-3.13.6/Makefile.am	2013-06-24 10:32:21.272134161 +0200

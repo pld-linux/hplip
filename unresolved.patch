@@ -9,15 +9,25 @@
      return;
    }
  
---- hplip-3.10.9/Makefile.am.wiget	2010-11-07 18:02:32.254945320 +0100
-+++ hplip-3.10.9/Makefile.am	2010-11-07 18:03:03.497071268 +0100
-@@ -56,7 +56,7 @@
+--- hplip-3.16.2/Makefile.am.orig	2016-02-22 17:38:26.050174980 +0100
++++ hplip-3.16.2/Makefile.am	2016-02-22 17:39:36.503505355 +0100
+@@ -60,7 +60,7 @@
  libsane_hpaio_la_LDFLAGS = -version-info 1:0:0
  endif
  # The following is a interlibrary dependency that must be compiled first.
--libsane_hpaio_la_LIBADD = libhpip.la libhpmud.la $(DBUS_LIBS) -lcups -ldl
-+libsane_hpaio_la_LIBADD = libhpip.la libhpmud.la $(DBUS_LIBS) -lcups -ldl -lc
+-libsane_hpaio_la_LIBADD = libhpip.la libhpmud.la libhpipp.la $(DBUS_LIBS) -lcups -ldl
++libsane_hpaio_la_LIBADD = libhpip.la libhpmud.la libhpipp.la $(DBUS_LIBS) -lcups -ldl -lc
  #libsane_hpaio_la_CFLAGS = -DWITH_NONAMESPACES -DSOAP_DEBUG
- libsane_hpaio_la_CFLAGS = $(DBUS_CFLAGS)
- endif # SCAN_BUILD
-
+ libsane_hpaio_la_CFLAGS = $(DBUS_CFLAGS) -Iprotocol
+ 
+--- hplip-3.16.2/Makefile.am.orig	2016-02-22 18:12:48.406755100 +0100
++++ hplip-3.16.2/Makefile.am	2016-02-23 21:07:09.809356876 +0100
+@@ -288,7 +288,7 @@
+ libhpipp_la_SOURCES = protocol/hp_ipp.c protocol/hp_ipp.h protocol/hp_ipp_i.h
+ libhpipp_la_CFLAGS = -DCONFDIR=\"$(hplip_confdir)\"
+ libhpipp_la_LDFLAGS = -version-info 0:1:0
+-libhpipp_la_LIBADD = libhpmud.la
++libhpipp_la_LIBADD = libhpmud.la -lcups
+ 
+ 
+ # cupsext
