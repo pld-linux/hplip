@@ -3,8 +3,8 @@
 # - separate hpijs package?
 #
 # Conditional build:
-%bcond_without	dbus	# build dbus
-%bcond_without	fax	# build fax, depends on dbus
+%bcond_without	dbus	# dbus (com.hplip.StatusService) support
+%bcond_without	fax	# fax support (cups backend+hplip components), depends on dbus
 
 %if %{without dbus}
 %undefine	with_fax
@@ -23,7 +23,7 @@ Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
 # note: this patch adds support to fixing only certain binary plugins. Newer plugin
-# version have differend md5 sums, different offsets, so handling new binaries need
+# version have different md5 sums, different offsets, so handling new binaries need
 # to be added
 Patch3:		%{name}-binary-fixup.patch
 Patch5:		%{name}-udev-rules.patch
