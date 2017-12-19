@@ -13,12 +13,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
-Version:	3.16.5
-Release:	2
+Version:	3.17.11
+Release:	1
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	3f50c45c52b2adaee8d9ff32db8c4e6e
+# Source0-md5:	09f3d50a2ba95e0fb66c78da7bab13ba
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
@@ -324,6 +324,8 @@ fi
 %{_datadir}/hplip/pcard
 %{_datadir}/hplip/prnt
 %{_datadir}/hplip/scan
+%attr(755,root,root) %{_datadir}/hplip/dat2drv
+%attr(755,root,root) %{_datadir}/hplip/locatedriver
 %attr(755,root,root) %{py_sitedir}/cupsext.so
 %attr(755,root,root) %{py_sitedir}/hpmudext.so
 %attr(755,root,root) %{py_sitedir}/pcardext.so
