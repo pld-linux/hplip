@@ -1,3 +1,4 @@
+# WARNING: when updating to 3.18.7+ beware of libImageProcessor binary blob (enigmatic "CDS feature" commonly causing problems); see Debian or Arch for patch to disable it
 # TODO:
 # - add desktop file for toolbox
 # - separate hpijs package?
