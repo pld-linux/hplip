@@ -13,12 +13,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
-Version:	3.17.11
+Version:	3.18.6
 Release:	1
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	09f3d50a2ba95e0fb66c78da7bab13ba
+# Source0-md5:	3857eae76c49c00fa185628d4dce7d61
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
@@ -26,11 +26,13 @@ Patch2:		pld-distro.patch
 # version have different md5 sums, different offsets, so handling new binaries need
 # to be added
 Patch3:		%{name}-binary-fixup.patch
+Patch4:		%{name}-destdir.patch
 Patch5:		%{name}-udev-rules.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	cups-devel >= 1.2
+BuildRequires:	cups-ppdc >= 1.2
 %{?with_dbus:BuildRequires:	dbus-devel >= 1.0.0}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
@@ -169,6 +171,7 @@ urządzenia HP AiO.
 %patch1 -p1
 %patch2 -p1
 #%patch3 -p1
+%patch4 -p1
 %patch5 -p1
 
 %{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python},' *.py fax/filters/pstotiff prnt/filters/hpps
@@ -219,7 +222,7 @@ done
 ln -s %{cups_filterdir}/foomatic-rip $RPM_BUILD_ROOT%{cups_filterdir}/foomatic-rip-hplip
 
 # useless (nothing is going to link to installed libraries/modules)
-%{__rm} $RPM_BUILD_ROOT{%{_libdir}/*.{so,la},%{_libdir}/sane/*.{so,la},%{py_sitedir}/*.la}
+%{__rm} $RPM_BUILD_ROOT{%{_libdir}/libhp*.{so,la},%{_libdir}/sane/*.{so,la},%{py_sitedir}/*.la}
 # handled by post script
 %{__rm} $RPM_BUILD_ROOT/etc/sane.d/dll.conf
 # junk

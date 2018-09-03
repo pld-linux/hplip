@@ -1,17 +1,17 @@
---- hplip-3.11.7/installer/distros.dat~	2011-07-24 22:06:50.000000000 +0300
-+++ hplip-3.11.7/installer/distros.dat	2011-10-06 23:01:42.727409095 +0300
-@@ -91,7 +91,7 @@
+--- hplip-3.18.7/installer/distros.dat.orig	2018-07-15 22:08:17.000000000 +0200
++++ hplip-3.18.7/installer/distros.dat	2018-08-31 16:24:23.832035335 +0200
+@@ -92,7 +92,7 @@
  # ****************************************
  
  [distros]
--distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs
-+distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,pld
+-distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux
++distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux,pld
  
  # ****************************************
  
-@@ -8468,3 +8468,131 @@
- [lfs:6:epm]
- packages=epm
+@@ -10795,3 +10795,131 @@
+ packages=automake
+ 
  
 +
 +# ****************************************
@@ -52,7 +52,7 @@
 +fix_ppd_symlink=0
 +drv_dir=/usr/lib/cups/driver
 +ui_toolkit=qt4
-+foomatic_rip_hplip=1
++native_cups=1
 +
 +[pld:3:cups]
 +packages=cups,cups-client
@@ -109,7 +109,7 @@
 +[pld:3:python23]
 +packages=python
 +
-+[pld:3:python2x]
++[pld:3:python2X]
 +packages=python
 +
 +[pld:3:reportlab]
