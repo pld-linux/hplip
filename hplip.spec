@@ -1,4 +1,5 @@
-# WARNING: when updating to 3.18.7+ beware of libImageProcessor binary blob (enigmatic "CDS feature" commonly causing problems); see Debian or Arch for patch to disable it
+# WARNING: when updating to 3.18.7+ beware of libImageProcessor binary blob (enigmatic "CDS feature" commonly causing problems);
+#          see Debian, Fedora or Arch for patch to disable it
 # TODO:
 # - add desktop file for toolbox
 # - separate hpijs package?
@@ -15,7 +16,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scannin
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
 Version:	3.18.6
-Release:	1
+Release:	2
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -46,6 +47,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	python-modules >= 2.2
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	sane-backends-devel
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
@@ -127,9 +129,7 @@ Group:		Applications/System
 Requires:	cups
 Requires:	cups-filters >= 1.0.43
 Obsoletes:	hpijs-ppd
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description ppd
 PPD database for Hewlett Packard printers.
@@ -178,6 +178,8 @@ urządzenia HP AiO.
 %{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python},' *.py fax/filters/pstotiff prnt/filters/hpps
 find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
 	%{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python},'
+%{__sed} -i -e '1s,^#!/usr/bin/python$,#!%{__python},' logcapture.py doctor.py
+
 %{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure.in
 
 %build
