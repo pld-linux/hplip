@@ -129,7 +129,7 @@ Group:		Applications/System
 Requires:	cups
 Requires:	cups-filters >= 1.0.43
 Obsoletes:	hpijs-ppd
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description ppd
 PPD database for Hewlett Packard printers.
