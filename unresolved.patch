@@ -1,17 +1,7 @@
---- hplip-3.10.9/scan/sane/ledm.c.wiget	2010-11-07 18:01:26.887129289 +0100
-+++ hplip-3.10.9/scan/sane/ledm.c	2010-11-07 18:02:17.662175777 +0100
-@@ -973,7 +973,7 @@ void ledm_close(SANE_Handle handle)
- 
-   if (ps == NULL || ps != session)
-   {
--    BUG("invalid sane_close\n");
-+//    BUG("invalid sane_close\n");
-     return;
-   }
- 
---- hplip-3.16.2/Makefile.am.orig	2016-02-22 17:38:26.050174980 +0100
-+++ hplip-3.16.2/Makefile.am	2016-02-22 17:39:36.503505355 +0100
-@@ -60,7 +60,7 @@
+diff -urNp -x '*.orig' hplip-3.22.6.org/Makefile.am hplip-3.22.6/Makefile.am
+--- hplip-3.22.6.org/Makefile.am	2022-07-10 22:42:55.852246806 +0200
++++ hplip-3.22.6/Makefile.am	2022-07-10 22:42:59.782176747 +0200
+@@ -71,7 +71,7 @@ else
  libsane_hpaio_la_LDFLAGS = -version-info 1:0:0
  endif
  # The following is a interlibrary dependency that must be compiled first.
@@ -20,14 +10,24 @@
  #libsane_hpaio_la_CFLAGS = -DWITH_NONAMESPACES -DSOAP_DEBUG
  libsane_hpaio_la_CFLAGS = $(DBUS_CFLAGS) -Iprotocol
  
---- hplip-3.16.2/Makefile.am.orig	2016-02-22 18:12:48.406755100 +0100
-+++ hplip-3.16.2/Makefile.am	2016-02-23 21:07:09.809356876 +0100
-@@ -288,7 +288,7 @@
+@@ -324,7 +324,7 @@ lib_LTLIBRARIES += libhpipp.la
  libhpipp_la_SOURCES = protocol/hp_ipp.c protocol/hp_ipp.h protocol/hp_ipp_i.h
  libhpipp_la_CFLAGS = -DCONFDIR=\"$(hplip_confdir)\"
  libhpipp_la_LDFLAGS = -version-info 0:1:0
 -libhpipp_la_LIBADD = libhpmud.la
 +libhpipp_la_LIBADD = libhpmud.la -lcups
  
- 
  # cupsext
+ cupsextdir = $(pyexecdir)
+diff -urNp -x '*.orig' hplip-3.22.6.org/scan/sane/ledm.c hplip-3.22.6/scan/sane/ledm.c
+--- hplip-3.22.6.org/scan/sane/ledm.c	2022-06-23 06:56:30.000000000 +0200
++++ hplip-3.22.6/scan/sane/ledm.c	2022-07-10 22:42:59.782176747 +0200
+@@ -1078,7 +1078,7 @@ void ledm_close(SANE_Handle handle)
+ 
+   if (ps == NULL || ps != session)
+   {
+-    BUG("invalid sane_close\n");
++//    BUG("invalid sane_close\n");
+     return;
+   }
+ 

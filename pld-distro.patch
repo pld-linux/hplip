@@ -1,20 +1,19 @@
---- hplip-3.18.7/installer/distros.dat.orig	2018-07-15 22:08:17.000000000 +0200
-+++ hplip-3.18.7/installer/distros.dat	2018-08-31 16:24:23.832035335 +0200
-@@ -92,7 +92,7 @@
+--- hplip-3.22.6/installer/distros.dat.orig	2022-07-10 22:48:06.595991488 +0200
++++ hplip-3.22.6/installer/distros.dat	2022-07-10 22:49:19.547691691 +0200
+@@ -94,7 +94,7 @@
  # ****************************************
  
  [distros]
--distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux
-+distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux,pld
+-distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux,zorin,mxlinux,elementary
++distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux,zorin,mxlinux,elementary,pld
  
  # ****************************************
  
-@@ -10795,3 +10795,131 @@
- packages=automake
+@@ -19541,3 +19541,130 @@
+ packages=epm
  
- 
+ # ****************************************
 +
-+# ****************************************
 +[pld]
 +index=60
 +versions=3

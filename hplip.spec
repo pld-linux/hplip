@@ -15,12 +15,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
-Version:	3.18.6
-Release:	2
+Version:	3.22.6
+Release:	1
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	3857eae76c49c00fa185628d4dce7d61
+# Source0-md5:	77eb0b3552f85a46a079d24f4632385f
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
@@ -30,6 +30,7 @@ Patch2:		pld-distro.patch
 Patch3:		%{name}-binary-fixup.patch
 Patch4:		%{name}-destdir.patch
 Patch5:		%{name}-udev-rules.patch
+Patch6:		no-undefined-macro.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -44,21 +45,21 @@ BuildRequires:	libusb-devel >= 1.0
 BuildRequires:	net-snmp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel >= 2.2
-BuildRequires:	python-modules >= 2.2
+BuildRequires:	python3-devel
+BuildRequires:	python3-modules
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	sane-backends-devel
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	python-modules
+Requires:	python3-modules
 Obsoletes:	hal-hplip
 Obsoletes:	hpijs
 Obsoletes:	hplip-daemon
 Obsoletes:	python-hplip
 Conflicts:	ghostscript <= 7.00-3
 # used in scan.py
-Suggests:	python-ReportLab >= 2.0
+Suggests:	python3-ReportLab >= 2.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _ulibdir        %{_prefix}/lib
@@ -89,7 +90,7 @@ Summary:	HPLIP GUI tools
 Summary(pl.UTF-8):	Narzędzia HPLIP z graficznym interfejsem użytkownika
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
-Requires:	python-PyQt4
+Requires:	python3-PyQt5
 
 %description gui-tools
 HPLIP GUI tools.
@@ -167,18 +168,19 @@ urządzenia HP AiO.
 
 %prep
 %setup -q
-%undos Makefile.am
+%undos Makefile.am installer/distros.dat
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 #%patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
-%{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python},' *.py fax/filters/pstotiff prnt/filters/hpps
+%{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python3},' *.py fax/filters/pstotiff prnt/filters/hpps
 find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
-	%{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python},'
-%{__sed} -i -e '1s,^#!/usr/bin/python$,#!%{__python},' logcapture.py doctor.py
+	%{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python3},'
+%{__sed} -i -e '1s,^#!/usr/bin/python$,#!%{__python3},' logcapture.py doctor.py
 
 %{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure.in
 
@@ -189,6 +191,7 @@ find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
 %{__automake}
 CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
+	PYTHON=%{__python3} \
 	%{!?with_dbus:--disable-dbus-build} \
 	%{!?with_fax:--disable-fax-build} \
 	--enable-cups-drv-install \
@@ -225,7 +228,7 @@ done
 ln -s %{cups_filterdir}/foomatic-rip $RPM_BUILD_ROOT%{cups_filterdir}/foomatic-rip-hplip
 
 # useless (nothing is going to link to installed libraries/modules)
-%{__rm} $RPM_BUILD_ROOT{%{_libdir}/libhp*.{so,la},%{_libdir}/sane/*.{so,la},%{py_sitedir}/*.la}
+%{__rm} $RPM_BUILD_ROOT{%{_libdir}/libhp*.{so,la},%{_libdir}/sane/*.{so,la},%{py3_sitedir}/*.la}
 # handled by post script
 %{__rm} $RPM_BUILD_ROOT/etc/sane.d/dll.conf
 # junk
@@ -332,10 +335,10 @@ fi
 %{_datadir}/hplip/scan
 %attr(755,root,root) %{_datadir}/hplip/dat2drv
 %attr(755,root,root) %{_datadir}/hplip/locatedriver
-%attr(755,root,root) %{py_sitedir}/cupsext.so
-%attr(755,root,root) %{py_sitedir}/hpmudext.so
-%attr(755,root,root) %{py_sitedir}/pcardext.so
-%attr(755,root,root) %{py_sitedir}/scanext.so
+%attr(755,root,root) %{py3_sitedir}/cupsext.so
+%attr(755,root,root) %{py3_sitedir}/hpmudext.so
+%attr(755,root,root) %{py3_sitedir}/pcardext.so
+%attr(755,root,root) %{py3_sitedir}/scanext.so
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/hplip.conf
 /lib/udev/rules.d/56-hpmud.rules
@@ -386,6 +389,9 @@ fi
 %files sane
 %defattr(644,root,root,755)
 %doc scan/sane/hpaio.desc
+%attr(755,root,root) %{_bindir}/hp-uiscan
+%{_datadir}/applications/hp-uiscan.desktop
+%{_datadir}/hplip/uiscan.py
 %attr(755,root,root) %{_libdir}/sane/libsane-hpaio.so.*.*.*
 %attr(755,root,root) %{_libdir}/sane/libsane-hpaio.so.1
 

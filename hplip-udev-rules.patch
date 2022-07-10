@@ -2,7 +2,7 @@
 +++ hplip-3.16.2/data/rules/56-hpmud.rules	2016-02-22 17:41:52.463499649 +0100
 @@ -12,7 +12,4 @@
  # ENV{ID_HPLIP}="1" is for Ubuntu udev-acl
- ATTR{idVendor}=="03f0", ENV{ID_USB_INTERFACES}=="*:0701??:*|*:08????:", OWNER="root", GROUP="lp", MODE="0664", ENV{libsane_matched}="yes", ENV{hp_test}="yes", ENV{ID_HPLIP}="1"
+ ATTR{idVendor}=="03f0", ENV{ID_USB_INTERFACES}=="*:0701??:*|*:ffcc00:", OWNER="root", GROUP="lp", MODE="0664", ENV{libsane_matched}="yes", ENV{hp_test}="yes", ENV{ID_HPLIP}="1"
  
 -# This rule will check the smart install feature, plugin status and firmware download for the required printers.
 -ENV{hp_test}=="yes", PROGRAM="/bin/sh -c 'logger -p user.info loading HP Device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c '/usr/bin/nohup /usr/bin/hp-config_usb_printer $env{BUSNUM}:$env{DEVNUM}'"
