@@ -1,5 +1,3 @@
-# WARNING: when updating to 3.18.7+ beware of libImageProcessor binary blob (enigmatic "CDS feature" commonly causing problems);
-#          see Debian, Fedora or Arch for patch to disable it
 # TODO:
 # - add desktop file for toolbox
 # - separate hpijs package?
@@ -31,6 +29,7 @@ Patch3:		%{name}-binary-fixup.patch
 Patch4:		%{name}-destdir.patch
 Patch5:		%{name}-udev-rules.patch
 Patch6:		no-undefined-macro.patch
+Patch7:		remove-all-ImageProcessor-functionality.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -176,6 +175,7 @@ urządzenia HP AiO.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python3},' *.py fax/filters/pstotiff prnt/filters/hpps
 find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
@@ -189,7 +189,6 @@ find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
 %{__aclocal}
 %{__autoconf}
 %{__automake}
-CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 %configure \
 	PYTHON=%{__python3} \
 	%{!?with_dbus:--disable-dbus-build} \
@@ -199,10 +198,15 @@ CXXFLAGS="%{rpmcflags} -fno-exceptions -fno-rtti"
 	--enable-foomatic-drv-install  \
 	--enable-foomatic-ppd-install \
 	--disable-foomatic-rip-hplip-install \
+	--disable-imageProcessor-build \
 	--enable-hpcups-install \
 	--enable-hpijs-install \
 	--enable-policykit \
 	--enable-pp-build \
+	--enable-gui-build \
+	--enable-qt5 \
+	--disable-qt4 \
+	--enable-scan-build \
 	--with-cupsbackenddir=%{cups_backenddir} \
 	--with-cupsfilterdir=%{cups_filterdir} \
 	--with-hpppddir=%{cups_ppddir} \
