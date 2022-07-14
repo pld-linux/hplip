@@ -372,7 +372,7 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/printsettings.py
 %attr(755,root,root) %{_datadir}/hplip/systray.py
 %attr(755,root,root) %{_datadir}/hplip/toolbox.py
-%{_datadir}/hplip/ui4
+%{_datadir}/hplip/ui5
 %{_datadir}/hplip/data/images
 %{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %{_desktopdir}/hplip.desktop
