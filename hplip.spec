@@ -14,7 +14,7 @@ Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scannin
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
 Version:	3.22.6
-Release:	
+Release:	2
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
@@ -168,14 +168,14 @@ urządzenia HP AiO.
 %prep
 %setup -q
 %undos Makefile.am installer/distros.dat
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-#%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
+%patch -P 0 -p1
+%patch -P 1 -p1
+%patch -P 2 -p1
+#patch -P 3 -p1
+%patch -P 4 -p1
+%patch -P 5 -p1
+%patch -P 6 -p1
+%patch -P 7 -p1
 
 %{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python3},' *.py fax/filters/pstotiff prnt/filters/hpps
 find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
