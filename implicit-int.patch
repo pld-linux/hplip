@@ -1,0 +1,11 @@
+--- hplip-3.25.2/prnt/hpps/pserror.c~	2025-02-27 13:12:29.000000000 +0100
++++ hplip-3.25.2/prnt/hpps/pserror.c	2025-05-11 01:04:54.143331820 +0200
+@@ -24,7 +24,7 @@
+ void message(int flags, char *format, ...)
+ {
+   va_list args ;
+-  static column = 0 ;		/* current screen column for message wrap */
++  static int column = 0 ;		/* current screen column for message wrap */
+   char msgbuf[MAX_MESSAGE] ;	/* buffer in which to put the message */
+   char *bufptr = msgbuf ;	/* message buffer pointer */
+ 

@@ -13,12 +13,12 @@
 Summary:	Hewlett-Packard Linux Imaging and Printing suite - printing and scanning using HP devices
 Summary(pl.UTF-8):	Narzędzia Hewlett-Packard Linux Imaging and Printing - drukowanie i skanowanie przy użyciu urządzeń HP
 Name:		hplip
-Version:	3.22.6
-Release:	3
+Version:	3.25.2
+Release:	1
 License:	BSD (hpijs), MIT (low-level scanning and printing code), GPL v2 (the rest)
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
-# Source0-md5:	77eb0b3552f85a46a079d24f4632385f
+# Source0-md5:	1f49ef7d5c6f17f2dd753ddf54a67704
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
@@ -28,8 +28,13 @@ Patch2:		pld-distro.patch
 Patch3:		%{name}-binary-fixup.patch
 Patch4:		%{name}-destdir.patch
 Patch5:		%{name}-udev-rules.patch
-Patch6:		no-undefined-macro.patch
 Patch7:		remove-all-ImageProcessor-functionality.patch
+Patch8:		implicit-int.patch
+Patch9:		hplip-covscan.patch
+Patch10:	hplip-scan-hpaio-include.patch
+Patch11:	hplip-hpaio-gcc14.patch
+Patch12:	hplip-scan-orblite-c99.patch
+Patch13:	hplip-pcardext-disable.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -174,8 +179,13 @@ urządzenia HP AiO.
 #patch -P 3 -p1
 %patch -P 4 -p1
 %patch -P 5 -p1
-%patch -P 6 -p1
 %patch -P 7 -p1
+%patch -P 8 -p1
+%patch -P 9 -p1
+%patch -P 10 -p1
+%patch -P 11 -p1
+%patch -P 12 -p1
+%patch -P 13 -p1
 
 %{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python3},' *.py fax/filters/pstotiff prnt/filters/hpps
 find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
@@ -185,6 +195,8 @@ find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
 %{__sed} -i -e 's#test -d /usr/share/polkit-1#true#' configure.in
 
 %build
+export CFLAGS="%{rpmcflags} -Wno-implicit-function-declaration"
+export CXXLAGS="%{rpmcxxflags} -Wno-implicit-function-declaration"
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
@@ -341,7 +353,6 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/locatedriver
 %attr(755,root,root) %{py3_sitedir}/cupsext.so
 %attr(755,root,root) %{py3_sitedir}/hpmudext.so
-%attr(755,root,root) %{py3_sitedir}/pcardext.so
 %attr(755,root,root) %{py3_sitedir}/scanext.so
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/hplip.conf
@@ -419,6 +430,7 @@ fi
 %files -n cups-backend-hpfax
 %defattr(644,root,root,755)
 %attr(755,root,root) %{cups_backenddir}/hpfax
+%attr(755,root,root) %{cups_filterdir}/hpcdmfax
 %attr(755,root,root) %{cups_filterdir}/hpcupsfax
 %attr(755,root,root) %{cups_filterdir}/pstotiff
 %{cups_mimedir}/pstotiff.types

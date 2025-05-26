@@ -18,16 +18,4 @@ diff -urNp -x '*.orig' hplip-3.22.6.org/Makefile.am hplip-3.22.6/Makefile.am
 +libhpipp_la_LIBADD = libhpmud.la -lcups
  
  # cupsext
- cupsextdir = $(pyexecdir)
-diff -urNp -x '*.orig' hplip-3.22.6.org/scan/sane/ledm.c hplip-3.22.6/scan/sane/ledm.c
---- hplip-3.22.6.org/scan/sane/ledm.c	2022-06-23 06:56:30.000000000 +0200
-+++ hplip-3.22.6/scan/sane/ledm.c	2022-07-10 22:42:59.782176747 +0200
-@@ -1078,7 +1078,7 @@ void ledm_close(SANE_Handle handle)
- 
-   if (ps == NULL || ps != session)
-   {
--    BUG("invalid sane_close\n");
-+//    BUG("invalid sane_close\n");
-     return;
-   }
- 
+ cupsextdir = $(PYTHONEXECDIR)
