@@ -57,10 +57,10 @@ BuildRequires:	sane-backends-devel
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	python3-modules
-Obsoletes:	hal-hplip
-Obsoletes:	hpijs
-Obsoletes:	hplip-daemon
-Obsoletes:	python-hplip
+Obsoletes:	hal-hplip < 3.11.5-2
+Obsoletes:	hpijs < 2.1.5
+Obsoletes:	hplip-daemon < 2.7.10-1
+Obsoletes:	python-hplip < 0.9.11-1
 Conflicts:	ghostscript <= 7.00-3
 # used in scan.py
 Suggests:	python3-reportlab >= 2.0
@@ -133,7 +133,8 @@ Summary(pl.UTF-8):	Baza danych PPD dla drukarek Hewlett Packard
 Group:		Applications/System
 Requires:	cups
 Requires:	cups-filters >= 1.0.43
-Obsoletes:	hpijs-ppd
+Obsoletes:	hpijs-foomatic < 1.5
+Obsoletes:	hpijs-ppd < 2.1.5
 BuildArch:	noarch
 
 %description ppd
