@@ -1,18 +1,18 @@
---- hplip-3.22.6/installer/distros.dat.orig	2022-07-10 22:48:06.595991488 +0200
-+++ hplip-3.22.6/installer/distros.dat	2022-07-10 22:49:19.547691691 +0200
-@@ -94,7 +94,7 @@
+--- hplip-3.25.8/installer/distros.dat.orig	2025-12-25 22:55:49.746392491 +0100
++++ hplip-3.25.8/installer/distros.dat	2025-12-26 14:39:52.039534849 +0100
+@@ -93,7 +93,7 @@
  # ****************************************
  
  [distros]
--distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux,zorin,mxlinux,elementary
-+distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux,zorin,mxlinux,elementary,pld
+-distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux,zorin,mxlinux,elementary,almalinux
++distros=unknown,mepis,debian,suse,mandriva,fedora,redhat,rhel,slackware,gentoo,redflag,ubuntu,xandros,freebsd,linspire,ark,pclinuxos,centos,igos,linuxmint,linpus,gos,boss,lfs,manjarolinux,zorin,mxlinux,elementary,almalinux,pld
  
  # ****************************************
  
-@@ -19541,3 +19541,130 @@
- same_as_version=6.1
+@@ -20407,3 +20407,179 @@ same_as_version=9.5
  
  # ****************************************
+ 
 +
 +[pld]
 +index=60
@@ -42,6 +42,7 @@
 +network_supported=1
 +parallel_supported=1
 +usb_supported=1
++libusb01=0
 +packaged_version=
 +release_date=
 +notes=
@@ -50,20 +51,32 @@
 +ppd_dir=/usr/share/cups/model
 +fix_ppd_symlink=0
 +drv_dir=/usr/lib/cups/driver
-+ui_toolkit=qt4
++ui_toolkit=qt5
 +native_cups=1
 +
 +[pld:3:cups]
 +packages=cups,cups-client
 +
++[pld:3:cups-ddk
++packages=cups
++
 +[pld:3:cups-devel]
 +packages=cups-devel
++
++[pld:3:cups-image]
++packages=cups-image-lib
++
++[pld:3:dbus]
++packages=dbus-devel
 +
 +[pld:3:gcc]
 +packages=gcc,gcc-c++
 +
 +[pld:3:gs]
 +packages=ghostscript
++
++[pld:3:libavahi-dev]
++packages=avahi-devel
 +
 +[pld:3:libcrypto]
 +packages=openssl-devel
@@ -75,7 +88,7 @@
 +packages=net-snmp-devel
 +
 +[pld:3:libpthread]
-+packages=glibc-headers
++packages=glibc-devel
 +
 +[pld:3:libtool]
 +packages=libtool
@@ -86,8 +99,11 @@
 +[pld:3:make]
 +packages=make
 +
++[pld:3:network]
++packages=wget
++
 +[pld:3:pil]
-+packages=python-PIL
++packages=python-pillow
 +
 +[pld:3:ppdev]
 +packages=
@@ -96,23 +112,65 @@
 +[pld:3:pyqt]
 +packages=python-PyQt
 +
-+[pld:3:python-devel]
-+packages=python-devel
-+
 +[pld:3:pyqt4]
 +packages=python-PyQt4
 +
 +[pld:3:pyqt4-dbus]
-+packages=python-dbus
++packages=python-PyQt4
 +
-+[pld:3:python23]
-+packages=python
++[pld:3:pyqt5]
++packages=python-PyQt5
++
++[pld:3:pyqt5-dbus]
++packages=python-PyQt5
 +
 +[pld:3:python2X]
 +packages=python
 +
++[pld:3:python-dbus]
++packages=python-dbus,python-pygobject
++
++[pld:3:python-devel]
++packages=python-devel
++
++[pld:3:python-xml]
++packages=python-modules
++
 +[pld:3:reportlab]
 +packages=python-ReportLab
++
++[pld:3:python3X]
++packages=python3
++
++[pld:3:python3-dbus]
++packages=python3-dbus
++
++[pld:3:python3-devel]
++packages=python3-devel
++
++[pld:3:python3-notify2]
++packages=python3-notify2
++
++[pld:3:python3-pil]
++packages=python3-pillow]
++
++[pld:3:python3-pyqt4]
++packages=python3-PyQt4
++
++[pld:3:python3-pyqt4-dbus]
++packages=python3-PyQt4
++
++[pld:3:python3-pyqt5]
++packages=python3-PyQt5
++
++[pld:3:python3-pyqt5-dbus]
++packages=python3-PyQt5
++
++[pld:3:python3-reportlab]
++packages=python3-reportlab]
++
++[pld:3:python3-xml]
++packages=python3-modules
 +
 +[pld:3:sane]
 +packages=sane-backends
@@ -126,17 +184,8 @@
 +[pld:3:xsane]
 +packages=xsane
 +
-+[pld:3:python-dbus]
-+packages=python-dbus,python-pygobject
-+
-+[pld:3:dbus]
-+packages=dbus-devel
-+
-+[pld:3:cups-image]
-+packages=cups-devel
-+
 +[pld:3:python-notify]
-+packages=python-notify
++packages=python-notify2
 +
 +[pld:3:policykit]
 +packages=polkit,polkit-gnome
