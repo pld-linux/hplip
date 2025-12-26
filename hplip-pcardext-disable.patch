@@ -1,11 +1,11 @@
-diff -up hplip-3.25.2/Makefile.am.pcardext-disable hplip-3.25.2/Makefile.am
---- hplip-3.25.2/Makefile.am.pcardext-disable	2025-04-11 10:23:29.576593786 +0200
-+++ hplip-3.25.2/Makefile.am	2025-04-11 10:24:08.259842784 +0200
-@@ -306,13 +306,6 @@ if !HPLIP_CLASS_DRIVER
+--- hplip-3.25.8/Makefile.am.orig	2025-12-26 17:28:53.554593546 +0100
++++ hplip-3.25.8/Makefile.am	2025-12-26 17:30:10.290844497 +0100
+@@ -306,14 +306,6 @@ if !HPLIP_CLASS_DRIVER
  pcarddir = $(hplipdir)/pcard
  dist_pcard_DATA = pcard/__init__.py pcard/photocard.py
  
 -# pcardext
+-pcardextdir = $(PYTHONEXECDIR)
 -pcardextdir = $(PYTHONEXECDIR)
 -pcardext_LTLIBRARIES = pcardext.la
 -pcardext_la_LDFLAGS = -module -avoid-version
