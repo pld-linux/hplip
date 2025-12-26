@@ -30,6 +30,8 @@ Patch9:		hplip-covscan.patch
 Patch10:	hplip-scan-hpaio-include.patch
 Patch11:	hplip-hpaio-gcc14.patch
 Patch12:	hplip-scan-orblite-c99.patch
+# pcardext is not ready for python3 (as of 3.25.8)
+Patch13:	hplip-pcardext-disable.patch
 URL:		http://hplipopensource.com/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -181,6 +183,7 @@ urządzenia HP AiO.
 %patch -P 10 -p1
 %patch -P 11 -p1
 %patch -P 12 -p1
+%patch -P 13 -p1
 
 %{__sed} -i -e '1s,^#!/usr/bin/env python$,#!%{__python3},' *.py fax/filters/pstotiff prnt/filters/hpps
 find base fax installer prnt scan ui ui4 -name '*.py' | xargs \
@@ -349,7 +352,8 @@ fi
 %attr(755,root,root) %{_datadir}/hplip/locatedriver
 %{py3_sitedir}/cupsext.so
 %{py3_sitedir}/hpmudext.so
-%{py3_sitedir}/pcardext.so
+# needs update for python3
+#%{py3_sitedir}/pcardext.so
 %{py3_sitedir}/scanext.so
 %dir %{_sysconfdir}/hp
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/hp/hplip.conf
