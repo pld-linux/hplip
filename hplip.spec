@@ -22,6 +22,7 @@ Source0:	https://downloads.sourceforge.net/hplip/%{name}-%{version}.tar.gz
 Patch0:		%{name}-desktop.patch
 Patch1:		unresolved.patch
 Patch2:		pld-distro.patch
+Patch3:		%{name}-build.patch
 Patch4:		%{name}-destdir.patch
 Patch5:		%{name}-udev-rules.patch
 Patch7:		remove-all-ImageProcessor-functionality.patch
@@ -171,10 +172,11 @@ urządzenia HP AiO.
 
 %prep
 %setup -q
-%undos Makefile.am installer/distros.dat
+%undos installer/distros.dat
 %patch -P 0 -p1
 %patch -P 1 -p1
 %patch -P 2 -p1
+%patch -P 3 -p1
 %patch -P 4 -p1
 %patch -P 5 -p1
 %patch -P 7 -p1
